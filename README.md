@@ -18,10 +18,10 @@ A disciplina IN1007 explora diferentes paradigmas de programação, incluindo:
 Mais informações sobre a disciplina podem ser encontradas no site oficial: [IN1007 - UFPE](https://www.cin.ufpe.br/~in1007/).
 
 ## Descrição do Projeto
-(Descreva brevemente o objetivo e funcionamento do projeto, bem como as tecnologias utilizadas.)
+
 
 ## Como Executar
-(Forneça instruções de instalação, dependências e como rodar o projeto.)
+
 
 ## Estrutura do Repositório
 - `/src` - Código-fonte do projeto
