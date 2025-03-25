@@ -5,7 +5,6 @@ Este repositório contém o projeto desenvolvido na disciplina **IN1007 - Paradi
 ## Integrantes do Projeto
 
 - **Larissa Azevedo Marques Cavalcanti de Albuquerque** - Aluna de Mestrado do PPGCC
-- **Maria Gabriela Alves Zuppardo** - Aluna de Mestrado do PPGCC
 - **Pedro Henrique Lopes dos Santos** - Aluno de Mestrado do PPGCC
 
 ## Sobre a Disciplina
