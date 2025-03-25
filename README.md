@@ -18,22 +18,22 @@ Mais informações sobre a disciplina podem ser encontradas no site oficial: [IN
 
 ## Descrição do Projeto
 
-# Exceções e Tratamento de Erros
+## Exceções e Tratamento de Erros
 Este projeto implementa um sistema de **exceções** para tratar erros de forma estruturada em nossa linguagem. O objetivo é permitir que erros sejam lançados e capturados de maneira organizada, melhorando a robustez do código.
 
-# Funcionalidades
+## Funcionalidades
 - Lançamento de exceções com `throw "Erro"`
 - Captura e tratamento de exceções com `try { ... } catch { ... }`
 - Definição de uma **hierarquia de tipos de erro**
 - (Opcional) Permitir exceções customizadas definidas pelo usuário
 
-# Desafios Técnicos
+## Desafios Técnicos
 - Criar um mecanismo eficiente para lançar exceções.
 - Implementar um sistema de captura e tratamento que preserve a execução segura do código.
 - Projetar uma estrutura de **hierarquia de exceções** bem organizada.
 - Possibilitar a criação de **exceções personalizadas** pelo usuário (opcional).
 
-# Exemplo de Uso
+## Exemplo de Uso
 ```C
 try {
     throw "Erro: Divisão por zero";
