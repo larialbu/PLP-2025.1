@@ -19,6 +19,7 @@ Decorators permitem modificar ou estender o comportamento de funções de forma 
 ## Escopo do Projeto
 Estender a Linguagem Funcional 1 apresentada na disciplina para que ela ofereça suporte à aplicação de decorators sobre definições de funções. O objetivo é permitir que funções sejam modificadas ou estendidas de forma modular, por meio da sintaxe @nomeDoDecorator logo antes da declaração da função.
 
+### Exemplo:
 ```python
 def log(func):
     def wrapper(a, b):
@@ -42,42 +43,42 @@ soma(3, 4)
 ## Gramática
 
 <pre>
-Programa ::= Expressao
+<a href="Funcional1/src/lf1/plp/functional1/Programa.java">Programa</a> ::= <a href="Funcional1/src/lf1/plp/expressions2/expression/Expressao.java">Expressao</a>
 
-Expressao ::= Valor
-            | ExpUnaria
-            | ExpBinaria
-            | ExpDeclaracao
-            | Id
-            | Aplicacao
-            | IfThenElse
+Expressao ::= <a href="Funcional1/src/lf1/plp/expressions2/expression/Valor.java">Valor</a>
+            | <a href="Funcional1/src/lf1/plp/expressions2/expression/ExpUnaria.java">ExpUnaria</a> 
+            | <a href="Funcional1/src/lf1/plp/expressions2/expression/ExpBinaria.java">ExpBinaria</a>
+            | <a href="Funcional1/src/lf1/plp/functional1/expression/ExpDeclaracao.java">ExpDeclaracao</a>
+            | <a href="Funcional1/src/lf1/plp/expressions2/expression/Id.java">Id</a>
+            | <a href="Funcional1/src/lf1/plp/functional1/expression/Aplicacao.java">Aplicacao</a>
+            | <a href="Funcional1/src/lf1/plp/functional1/expression/IfThenElse.java">IfThenElse</a>
 
-Valor ::= ValorConcreto
+Valor ::= <a href="Funcional1/src/lf1/plp/expressions2/expression/ValorConcreto.java">ValorConcreto</a> 
 
-ValorConcreto ::= ValorInteiro
-                | ValorBooleano
-                | ValorString
+ValorConcreto ::= <a href="Funcional1/src/lf1/plp/expressions2/expression/ValorInteiro.java">ValorInteiro</a> 
+                | <a href="Funcional1/src/lf1/plp/expressions2/expression/ValorBooleano.java">ValorBooleano</a>
+                | <a href="Funcional1/src/lf1/plp/expressions2/expression/ValorString.java">ValorString</a>
 
-ExpUnaria ::= "-" Expressao
-            | "not" Expressao
-            | "length" Expressao
+ExpUnaria ::= <a href="Funcional1/src/lf1/plp/expressions2/expression/ExpMenos.java">"-" Expressao</a>
+            | <a href="Funcional1/src/lf1/plp/expressions2/expression/ExpNot.java">"not" Expressao</a>
+            | <a href="Funcional1/src/lf1/plp/expressions2/expression/ExpLength.java">"length" Expressao</a>
 
-ExpBinaria ::= Expressao "+" Expressao
-             | Expressao "-" Expressao
-             | Expressao "and" Expressao
-             | Expressao "or" Expressao
-             | Expressao "==" Expressao
-             | Expressao "++" Expressao
+ExpBinaria ::= <a href="Funcional1/src/lf1/plp/expressions2/expression/ExpSoma.java">Expressao "+" Expressao</a>
+             | <a href="Funcional1/src/lf1/plp/expressions2/expression/ExpSub.java">Expressao "-" Expressao</a>
+             | <a href="Funcional1/src/lf1/plp/expressions2/expression/ExpAnd.java">Expressao "and" Expressao</a>
+             | <a href="Funcional1/src/lf1/plp/expressions2/expression/ExpOr.java">Expressao "or" Expressao</a>
+             | <a href="Funcional1/src/lf1/plp/expressions2/expression/ExpEquals.java">Expressao "==" Expressao</a>
+             | <a href="Funcional1/src/lf1/plp/expressions2/expression/ExpConcat.java">Expressao "++" Expressao</a>
 
-ExpDeclaracao ::= "let" DeclaracaoFuncional "in" Expressao
+ExpDeclaracao ::= "let" <a href="Funcional1/src/lf1/plp/functional1/declaration/DeclaracaoFuncional.java">DeclaracaoFuncional</a> "in" Expressao
 
-DeclaracaoFuncional ::= DecVariavel
+DeclaracaoFuncional ::= <a href="Funcional1/src/lf1/plp/functional1/declaration/DeclaracaoVariavel.java">DecVariavel</a>
                       | DecFuncaoComDecorator
-                      | DecComposta
+                      | <a href="Funcional1/src/lf1/plp/functional1/declaration/DeclaracaoComposta.java">DecComposta</a>
 
 DecVariavel ::= "var" Id "=" Expressao
 
-DecFuncaoComDecorator ::= Decorators? DecFuncao
+DecFuncaoComDecorator ::= Decorators? <a href="Funcional1/src/lf1/plp/functional1/declaration/DeclaracaoFuncao.java">DecFuncao</a>
 
 Decorators ::= Decorator+
     
@@ -112,11 +113,20 @@ Decorator ::= "@" Id
 
 
 ## Como Executar
-```
+
+### 1. Para compilar todas as linguagens e buildar o applet (interpretador):
+```bash
 mvn package
-```
-- Este comando builda todo o projeto, todas as linguagens com o Applet.
-```
 java -jar Applet/target/Applet-0.0.1-jar-with-dependencies.jar
 ```
-- Este comando executa o app java.
+
+### 2. Para compilação individual de cada linguagem:
+```bash
+cd <pathDaLinguagem>
+mvn clean generate-sources compile exec:java
+```
+
+### 3. Usando makefile:
+```bash
+make plp
+```
