@@ -78,9 +78,7 @@ DeclaracaoFuncional ::= <a href="Funcional1/src/lf1/plp/functional1/declaration/
 
 DecVariavel ::= "var" Id "=" Expressao
 
-DecFuncaoComDecorator ::= Decorators? <a href="Funcional1/src/lf1/plp/functional1/declaration/DeclaracaoFuncao.java">DecFuncao</a>
-
-Decorators ::= Decorator+
+DecFuncaoComDecorator ::= Decorator* <a href="Funcional1/src/lf1/plp/functional1/declaration/DeclaracaoFuncao.java">DecFuncao</a>
     
 Decorator ::= "@" Id
 
@@ -104,9 +102,7 @@ DeclaracaoFuncional ::= DecVariavel
                       | DecFuncaoComDecorator
                       | DecComposta
 
-DecFuncaoComDecorator ::= Decorators? DecFuncao
-
-Decorators ::= Decorator+
+DecFuncaoComDecorator ::= Decorator* DecFuncao
     
 Decorator ::= "@" Id
 </pre>
