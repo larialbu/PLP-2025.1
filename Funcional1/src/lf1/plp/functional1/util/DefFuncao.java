@@ -16,9 +16,12 @@ public class DefFuncao {
 
 	protected Expressao exp;
 
-	public DefFuncao(List<Id> argsId, Expressao exp) {
+	protected List<Id> decorators;
+
+	public DefFuncao(List<Id> argsId, Expressao exp, List<Id> decorators) {
 		this.argsId = argsId;
 		this.exp = exp;
+		this.decorators = decorators;
 	}
 
 	public List<Id> getListaId() {
@@ -27,6 +30,10 @@ public class DefFuncao {
 
 	public Expressao getExp() {
 		return exp;
+	}
+
+	public List<Id> getDecorators(){
+		return decorators;
 	}
 
 	/**
@@ -117,12 +124,17 @@ public class DefFuncao {
 	}
 	
 	public DefFuncao clone() {
-		List<Id> novaLista = new ArrayList<Id>(this.argsId.size());
-		
-		for (Id id : this.argsId){
-			novaLista.add(id.clone());
+		List<Id> novaListaArgs = new ArrayList<Id>(this.argsId.size());
+		List<Id> novaListaDecr = new ArrayList<Id>(this.decorators.size());
+
+		for (Id idA : this.argsId){
+			novaListaArgs.add(idA.clone());
+		}
+
+		for (Id idB : this.decorators){
+			novaListaDecr.add(idB.clone());
 		}
 		
-		return new DefFuncao(novaLista, this.exp.clone());
+		return new DefFuncao(novaListaArgs, this.exp.clone(), novaListaDecr);
 	}
 }

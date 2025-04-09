@@ -24,9 +24,9 @@ public class DecFuncao implements DeclaracaoFuncional {
 
 	private DefFuncao funcao;
 
-	public DecFuncao(Id idFun, List<Id> argsId, Expressao exp) {
+	public DecFuncao(Id idFun, List<Id> argsId, Expressao exp, List<Id> decorators) {
 		this.id = idFun;
-		this.funcao = new DefFuncao(argsId, exp);
+		this.funcao = new DefFuncao(argsId, exp, decorators);
 	}
 
 	public Id getId() {
@@ -39,6 +39,10 @@ public class DecFuncao implements DeclaracaoFuncional {
 
 	public Expressao getExpressao() {
 		return funcao.getExp();
+	}
+	
+	public List<Id> getDecorators(){
+		return funcao.getDecorators();
 	}
 
 	/**
@@ -128,7 +132,7 @@ public class DecFuncao implements DeclaracaoFuncional {
 
 	public DecFuncao clone() {
 		DefFuncao aux = this.funcao.clone();
-		return new DecFuncao(this.id.clone(), aux.getListaId(), aux.getExp());
+		return new DecFuncao(this.id.clone(), aux.getListaId(), aux.getExp(), aux.getDecorators());
 	}
 
 	public void elabora(AmbienteCompilacao amb, AmbienteCompilacao aux) throws VariavelJaDeclaradaException {
