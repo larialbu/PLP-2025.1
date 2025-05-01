@@ -63,7 +63,11 @@ Resultado: 7
     
     Atribuicao ::= <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/Id.java">Id</a> &quot;:=&quot; <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/Expressao.java">Expressao</a>
     
-    Expressao ::= <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/Valor.java">Valor</a> | <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/ExpUnaria.java">ExpUnaria</a> | <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/ExpBinaria.java">ExpBinaria</a> | Id 
+    Expressao ::= <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/Valor.java">Valor</a> 
+                | <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/ExpUnaria.java">ExpUnaria</a> 
+                | <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/ExpBinaria.java">ExpBinaria</a> 
+                | Id "(" [ ListaExpressao ] ")" 
+                | Id
     
     Valor ::= <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/ValorConcreto.java">ValorConcreto</a>
    
@@ -91,8 +95,14 @@ Resultado: 7
     DeclaracaoProcedimento ::= <a href="../plp/Imperativa2/src/li2/plp/imperative2/declaration/DeclaracaoProcedimento.java">&quot;proc&quot; Id &quot;(&quot; [ ListaDeclaracaoParametro ] &quot;)&quot; &quot;{&quot; Comando &quot;}&quot;</a>
   
     ListaDeclaracaoParametro ::= <a href="../plp/Imperativa2/src/li2/plp/imperative2/declaration/DeclaracaoParametro.java">Tipo Id</a> | <a href="../plp/Imperativa2/src/li2/plp/imperative2/declaration/ListaDeclaracaoParametro.java">Tipo Id &quot;,&quot; ListaDeclaracaoParametro</a>
+
+    Tipo ::= TipoPrimitivo | TipoFuncao
     
-    Tipo ::= &quot;string&quot; | &quot;int&quot; | &quot;boolean&quot;
+    TipoPrimitivo ::= &quot;string&quot; | &quot;int&quot; | &quot;boolean&quot;
+
+    TipoFuncao ::= "func" "(" [ ListaTipos ] ")" "->" Tipo
+
+    ListaTipos ::= Tipo | Tipo "," ListaTipos
     
     While ::= &quot;while&quot; Expressao &quot;do&quot; Comando
   
@@ -110,11 +120,44 @@ Resultado: 7
 ## O que tem de novo?
 
 <pre>
+Expressao ::= <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/Valor.java">Valor</a> 
+                | <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/ExpUnaria.java">ExpUnaria</a> 
+                | <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/ExpBinaria.java">ExpBinaria</a> 
+                | Id "(" [ ListaExpressao ] ")"    // <- Permite que associemos variáveis a funções.
+                | Id
+
+Tipo ::= TipoPrimitivo
+       | TipoFuncao
+
+TipoPrimitivo ::= "string" | "int" | "boolean"
+
+TipoFuncao ::= "func" "(" [ ListaTipos ] ")" "->" Tipo
+
+ListaTipos ::= Tipo | Tipo "," ListaTipos
+
 ChamadaProcedimento ::= { Decorador } "call" Id "(" [ ListaExpressao ] ")" 
 
 Decorador ::= "@" Id
 </pre>
 
+### Exemplo de como os decorators funcionariam na nossa gramática:
+
+```
+proc log(func(int, int) -> int f, int a, int b) {
+    write("Chamando função com argumentos:");
+    write(a);
+    write(b);
+    var resultado = f(a, b);
+    write("Resultado:");
+    write(resultado);
+}
+
+proc soma(int x, int y) {
+    return x + y;
+}
+
+call log(soma, 3, 4);
+```
 
 ## Como Executar
 
