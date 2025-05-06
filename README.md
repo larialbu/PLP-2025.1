@@ -13,7 +13,7 @@ Informações sobre a disciplina podem ser encontradas no site: [IN1007 - UFPE](
 # Descrição do Projeto
 
 ## Decorators para funções e métodos
-Este projeto implementa suporte a decorators para funções e métodos em uma linguagem customizada criada com Java e JavaCC, inspirado no [PEP 318 — Decorators for Functions and Methods](https://peps.python.org/pep-0318/).
+Este projeto implementa suporte a decorators para funções e métodos em uma linguagem customizada criada com Java e JavaCC, inspirado no [PEP 318 — Decorators for Functions and Methods](https://peps.python.org/pep-0318/) para Python.
 Decorators permitem modificar ou estender o comportamento de funções de forma modular, reutilizável e elegante. Com eles, é possível adicionar funcionalidades como logging, validação, memoização, entre outros — sem alterar diretamente o corpo da função.
 
 ## Escopo do Projeto
@@ -44,6 +44,43 @@ Resultado: 7
 - log é um decorator que envolve a função original com um comportamento extra (mensagens).
 - @log é a forma declarativa de aplicar o decorator.
 - O resultado é uma função com o mesmo nome e comportamento da original, mas com comportamento adicional sem alterar o corpo da função.
+
+### Exemplo de como os decorators funcionariam na linguagem da disciplina:
+
+```
+proc log(func(int, int) -> int f, int a, int b) {
+    write("Chamando função com argumentos:");
+    write(a);
+    write(b);
+    var resultado = f(a, b);
+    write("Resultado:");
+    write(resultado);
+}
+
+proc soma(int x, int y) {
+    return x + y;
+}
+
+@log call soma(3, 4);
+```
+
+### Similaridades e Diferenças
+As duas linguagens estão fazendo a mesma coisa: passando uma função como argumento, chamando-a, e adicionando conteúdo antes e depois, mas existem diferenças:
+Em python, os decorators são aplicados na declaração da função como no código a seguir:
+```python
+@log
+def soma(x, y):
+return x + y
+```
+Isso permite aplicar decorators automaticamente a qualquer chamada futura da função soma.
+Na nossa linguagem, optamos por associar os decorators à chamada das funções, permitindo aplicar o efeito do decorator apenas quando o desenvolvedor quiser, como mostra o código a seguir:
+```
+@log call soma(3, 4);
+```
+Igualmente, decorators encadeáveis podem ser definidos da seguinte forma:
+```
+@log @validate call soma(3, 4);
+```
 
 ## Gramática EBNF
 
@@ -139,25 +176,6 @@ ChamadaProcedimento ::= { Decorador } "call" Id "(" [ ListaExpressao ] ")"
 
 Decorador ::= "@" Id
 </pre>
-
-### Exemplo de como os decorators funcionariam na nossa gramática:
-
-```
-proc log(func(int, int) -> int f, int a, int b) {
-    write("Chamando função com argumentos:");
-    write(a);
-    write(b);
-    var resultado = f(a, b);
-    write("Resultado:");
-    write(resultado);
-}
-
-proc soma(int x, int y) {
-    return x + y;
-}
-
-call log(soma, 3, 4);
-```
 
 ## Como Executar
 
