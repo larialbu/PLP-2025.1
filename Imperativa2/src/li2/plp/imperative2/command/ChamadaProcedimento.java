@@ -16,6 +16,8 @@ import li2.plp.imperative2.declaration.DefProcedimento;
 import li2.plp.imperative2.declaration.ListaDeclaracaoParametro;
 import li2.plp.imperative2.memory.AmbienteExecucaoImperativa2;
 import li2.plp.imperative2.util.TipoProcedimento;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ChamadaProcedimento implements Comando {
 
@@ -23,10 +25,13 @@ public class ChamadaProcedimento implements Comando {
 
 	private ListaExpressao parametrosReais;
 
+	private List<Id> decorators;
+
 	public ChamadaProcedimento(Id nomeProcedimento,
-			ListaExpressao parametrosReais) {
+			ListaExpressao parametrosReais, List<Id> decorators) {
 		this.nomeProcedimento = nomeProcedimento;
 		this.parametrosReais = parametrosReais;
+		this.decorators = decorators;
 	}
 
 	public AmbienteExecucaoImperativa executar(AmbienteExecucaoImperativa amb)
@@ -45,8 +50,14 @@ public class ChamadaProcedimento implements Comando {
 				.getParametrosFormais();
 		AmbienteExecucaoImperativa2 aux = bindParameters(ambiente,
 				parametrosFormais);
-		aux = (AmbienteExecucaoImperativa2) procedimento.getComando().executar(
-				aux);
+		aux = (AmbienteExecucaoImperativa2) procedimento.getComando().executar(aux);
+		for (int i = decorators.size()-1; i >= 0; i--){
+			Id decoratorId = decorators.get(i);
+			DefProcedimento decoratorProc = aux.getProcedimento(decoratorId);
+			aux.incrementa();
+			aux = (AmbienteExecucaoImperativa2) decoratorProc.getComando().executar(aux);
+			aux.restaura();
+		}
 		aux.restaura();
 		return aux;
 
@@ -94,4 +105,7 @@ public class ChamadaProcedimento implements Comando {
 
 	}
 
+	public List<Id> getDecorators(){
+		return decorators;
+	}
 }

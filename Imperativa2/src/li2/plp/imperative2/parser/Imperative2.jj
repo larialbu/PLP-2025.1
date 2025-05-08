@@ -132,6 +132,7 @@ TOKEN : /* TOKENS DE IMPERATIVA 2 */
 {
   < PROC: "proc" >
 | < CALL: "call" >
+| < AT: "@" >
 }
 
 TOKEN : /* TOKENS DOS POSS�VEIS TIPOS */
@@ -258,10 +259,10 @@ Programa Input() :
     Programa retorno;
 }
 {
-   retorno = PPrograma() <EOF>
-   { 
-	return retorno; 
-   }
+	retorno = PPrograma() <EOF>
+    { 
+		return retorno; 
+    }
 }
 
 Programa PPrograma() :
@@ -654,11 +655,25 @@ ChamadaProcedimento PChamadaProcedimento():
 {
 	Id nomeProcedimento;
 	ListaExpressao parametrosAtuais;
+	List<Id> decorators = new ArrayList<Id>();
 }
 {
+	(PDecorator(decorators))*
+
 	<CALL> nomeProcedimento = PId() <LPAREN> parametrosAtuais = PListaExpressao() <RPAREN>
 	{
-		return new ChamadaProcedimento(nomeProcedimento, parametrosAtuais);
+		return new ChamadaProcedimento(nomeProcedimento, parametrosAtuais, decorators);
+	}
+}
+
+void PDecorator(List<Id> lista):
+{
+  Id decoratorId;
+}
+{
+	<AT> decoratorId = PId()
+	{
+		lista.add(decoratorId);
 	}
 }
 
