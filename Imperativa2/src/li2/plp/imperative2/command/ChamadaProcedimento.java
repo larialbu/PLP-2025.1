@@ -50,7 +50,6 @@ public class ChamadaProcedimento implements Comando {
 				.getParametrosFormais();
 		AmbienteExecucaoImperativa2 aux = bindParameters(ambiente,
 				parametrosFormais);
-		aux = (AmbienteExecucaoImperativa2) procedimento.getComando().executar(aux);
 		for (int i = decorators.size()-1; i >= 0; i--){
 			Id decoratorId = decorators.get(i);
 			DefProcedimento decoratorProc = aux.getProcedimento(decoratorId);
@@ -58,6 +57,7 @@ public class ChamadaProcedimento implements Comando {
 			aux = (AmbienteExecucaoImperativa2) decoratorProc.getComando().executar(aux);
 			aux.restaura();
 		}
+		aux = (AmbienteExecucaoImperativa2) procedimento.getComando().executar(aux);
 		aux.restaura();
 		return aux;
 

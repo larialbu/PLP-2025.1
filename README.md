@@ -157,18 +157,30 @@ Igualmente, decorators encadeáveis podem ser definidos da seguinte forma:
 ## O que tem de novo?
 
 <pre>
+    Comando ::= <a href="../plp/Imperativa2/src/li2/plp/imperative1/command/Atribuicao.java">Atribuicao</a>
+              | <a href="../plp/Imperativa2/src/li2/plp/imperative1/command/ComandoDeclaracao.java">ComandoDeclaracao</a>
+              | <a href="../plp/Imperativa2/src/li2/plp/imperative1/command/While.java">While</a>
+              | <a href="../plp/Imperativa2/src/li2/plp/imperative1/command/IfThenElse.java">IfThenElse</a>
+              | <a href="../plp/Imperativa2/src/li2/plp/imperative1/command/IO.java">IO</a>
+              | <a href="../plp/Imperativa2/src/li2/plp/imperative1/command/SequenciaComando.java">Comando &quot;;&quot; Comando</a>
+              | <a href="../plp/Imperativa2/src/li2/plp/imperative1/command/Skip.java">Skip</a>
+              | <a href="../plp/Imperativa2/src/li2/plp/imperative2/command/ChamadaProcedimento.java">ChamadaProcedimento</a>
+              | Retorno
+
+Retorno ::= return Expressao
+
 Expressao ::= <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/Valor.java">Valor</a> 
                 | <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/ExpUnaria.java">ExpUnaria</a> 
                 | <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/ExpBinaria.java">ExpBinaria</a> 
-                | Id "(" [ ListaExpressao ] ")"    // <- Permite que associemos variáveis a funções.
+                | Id "(" [ ListaExpressao ] ")"    // <- Permite que associemos variáveis a funções e procedimentos, NÃO É UMA CHAMADA.
                 | Id
 
 Tipo ::= TipoPrimitivo
-       | TipoFuncao
+       | TipoSubAlgoritmo
 
 TipoPrimitivo ::= "string" | "int" | "boolean"
 
-TipoFuncao ::= "func" "(" [ ListaTipos ] ")" "->" Tipo
+TipoSubAlgoritmo ::= "func" Id "(" [ ListaTipos ] ")" "->" Tipo
 
 ListaTipos ::= Tipo | Tipo "," ListaTipos
 
