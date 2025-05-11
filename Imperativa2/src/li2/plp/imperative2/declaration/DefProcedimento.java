@@ -20,6 +20,8 @@ public class DefProcedimento {
 	 */
 	private Comando comando;
 
+	private Tipo tipoRetorno;
+
 	/**
 	 * Construtor
 	 * 
@@ -32,6 +34,8 @@ public class DefProcedimento {
 			Comando comando) {
 		this.parametrosFormais = parametrosFormais;
 		this.comando = comando;
+
+		this.tipoRetorno = null;
 	}
 
 	/**
@@ -51,6 +55,23 @@ public class DefProcedimento {
 	public ListaDeclaracaoParametro getParametrosFormais() {
 		return parametrosFormais;
 	}
+
+	public boolean retornaValor(){
+		if (this.tipoRetorno == null){
+			return false;
+		}
+		return true;
+	}
+
+	public void setTipoRetorno(Tipo tipo){
+		if(tipo != null){
+			this.tipoRetorno = tipo;
+		}
+	}
+
+	public Tipo getTipoRetorno() {
+        return tipoRetorno;
+    }
 
 	public Tipo getTipo() {
 		return new TipoProcedimento(parametrosFormais.getTipos());

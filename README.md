@@ -175,12 +175,14 @@ Expressao ::= <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/Va
                 | Id "(" [ ListaExpressao ] ")"    // <- Permite que associemos variáveis a funções e procedimentos, NÃO É UMA CHAMADA.
                 | Id
 
+DeclaracaoProcedimento ::= <a href="../plp/Imperativa2/src/li2/plp/imperative2/declaration/DeclaracaoProcedimento.java">&quot;proc&quot; Tipo Id &quot;(&quot; [ ListaDeclaracaoParametro ] &quot;)&quot; &quot;{&quot; Comando &quot;}&quot;</a>
+
 Tipo ::= TipoPrimitivo
        | TipoSubAlgoritmo
 
-TipoPrimitivo ::= "string" | "int" | "boolean"
+TipoPrimitivo ::= "string" | "int" | "boolean" | "void"
 
-TipoSubAlgoritmo ::= "func" Id "(" [ ListaTipos ] ")" "->" Tipo
+TipoSubAlgoritmo ::= "func" Id "(" [ ListaTipos ] ")" "->" Tipo //adjust
 
 ListaTipos ::= Tipo | Tipo "," ListaTipos
 

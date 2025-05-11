@@ -5,12 +5,15 @@ import java.util.List;
 
 import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions2.expression.Expressao;
+import li2.plp.expressions2.memory.AmbienteCompilacao;
 import li2.plp.expressions2.memory.VariavelJaDeclaradaException;
 import li2.plp.expressions2.memory.VariavelNaoDeclaradaException;
 import li2.plp.imperative1.memory.AmbienteCompilacaoImperativa;
 import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
 import li2.plp.imperative1.memory.ListaValor;
 import li2.plp.imperative1.util.Lista;
+import li2.plp.imperative2.declaration.DeclaracaoParametro;
+import li2.plp.imperative2.declaration.ListaDeclaracaoParametro;
 
 public class ListaExpressao extends Lista<Expressao> {
 
@@ -51,4 +54,27 @@ public class ListaExpressao extends Lista<Expressao> {
 		return result;
 	}
 
+	public boolean checaTipo(AmbienteCompilacao ambiente, ListaDeclaracaoParametro parametrosFormais) 
+			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
+		List<Tipo> tiposReais = this.getTipos((AmbienteCompilacaoImperativa) ambiente);
+
+		if(tiposReais.size() != parametrosFormais.length()){
+			return false;
+		}
+
+		ListaDeclaracaoParametro params = parametrosFormais;
+
+		for(int i=0; i<tiposReais.size(); i++){
+			Tipo tipoReal = tiposReais.get(i);
+			Tipo tipoFormal = params.getHead().getTipo();
+
+			if(!tipoReal.eIgual(tipoFormal)){
+				return false;
+			}
+			
+			params = (ListaDeclaracaoParametro) params.getTail();
+		}
+
+		return true;
+	}
 }

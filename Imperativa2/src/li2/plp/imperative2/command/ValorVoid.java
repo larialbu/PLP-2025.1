@@ -1,26 +1,36 @@
 package li2.plp.imperative2.command;
 
+import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions2.expression.Valor;
+import li2.plp.expressions2.memory.AmbienteExecucao;
+import li2.plp.expressions2.memory.AmbienteCompilacao;
 
 public class ValorVoid implements Valor {
 
     @Override
-    public String toString() {
-        return "void";
+    public Valor avaliar(AmbienteExecucao ambiente) {
+    return this;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof ValorVoid;
+    public Valor reduzir(AmbienteExecucao ambiente) {
+        // Não há redução para ValorVoid, retorna ele mesmo
+        return this;
     }
 
     @Override
-    public int hashCode() {
-        return 0;
+    public boolean checaTipo(AmbienteCompilacao ambiente) {
+        return true;  // Considera sempre válido.
     }
 
     @Override
-    public Valor clone() {
-        return new ValorVoid();
+    public Tipo getTipo(AmbienteCompilacao ambiente) {
+        // Retorna o tipo "void"
+        return null;
+    }
+
+    @Override
+    public ValorVoid clone() {
+        return this;
     }
 }

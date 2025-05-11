@@ -1,12 +1,15 @@
 package li2.plp.imperative2.command;
 
 import java.util.List;
-import li2.plp.imperative1.memory.ListaValor;
-import li2.plp.imperative2.memory.AmbienteExecucaoImperativa2;
-import li2.plp.expressions2.memory.AmbienteExecucao;
+import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.expression.Valor;
+import li2.plp.expressions2.memory.AmbienteExecucao;
+import li2.plp.expressions2.memory.AmbienteCompilacao;
+import li2.plp.imperative1.memory.ListaValor;
+import li2.plp.imperative1.memory.AmbienteCompilacaoImperativa;
+import li2.plp.imperative2.memory.AmbienteExecucaoImperativa2;
 import li2.plp.imperative2.declaration.DefProcedimento;
 import li2.plp.imperative2.declaration.ListaDeclaracaoParametro;
 
@@ -14,6 +17,7 @@ import li2.plp.imperative2.command.ReturnException;
 import li2.plp.imperative2.command.ValorVoid;
 
 public class ChamadaFuncao implements Expressao {
+
     private Id nomeProcedimento;
     private ListaExpressao parametrosReais;
 
@@ -27,6 +31,10 @@ public class ChamadaFuncao implements Expressao {
         try {
             AmbienteExecucaoImperativa2 aux = (AmbienteExecucaoImperativa2) ambiente;
             DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
+
+            if(!procedimento.retornaValor()){
+                throw new RuntimeException("Procedimento '" + nomeProcedimento + "' não retorna valor.");
+            }
 
             aux.incrementa();
             ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
@@ -63,7 +71,38 @@ public class ChamadaFuncao implements Expressao {
     }
 
     @Override
+    public boolean checaTipo(AmbienteCompilacao ambiente) {
+        try {
+            // Realiza o cast para o ambiente de compilação específico
+            AmbienteCompilacaoImperativa aux = (AmbienteCompilacaoImperativa) ambiente;
+            DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
+            ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
+            return parametrosReais.checaTipo(ambiente, parametrosFormais);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public Tipo getTipo(AmbienteCompilacao ambiente) {
+        try {
+            // Realiza o cast para o ambiente de compilação específico
+            AmbienteCompilacaoImperativa aux = (AmbienteCompilacaoImperativa) ambiente;
+            DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
+            return procedimento.getTipoRetorno();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Expressao reduzir(AmbienteExecucao ambiente) {
+        // Para simplificação, pode retornar a própria expressão se não for possível reduzir.
+        return this;
+    }
+
+    @Override
     public Expressao clone() {
-        return new ChamadaFuncao(nomeProcedimento, parametrosReais);
+        return new ChamadaFuncao(this.nomeProcedimento, this.parametrosReais);
     }
 }

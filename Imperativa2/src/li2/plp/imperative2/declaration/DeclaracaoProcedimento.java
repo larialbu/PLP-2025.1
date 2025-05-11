@@ -1,5 +1,6 @@
 package li2.plp.imperative2.declaration;
 
+import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.memory.IdentificadorJaDeclaradoException;
 import li2.plp.expressions2.memory.IdentificadorNaoDeclaradoException;
@@ -38,20 +39,41 @@ public class DeclaracaoProcedimento extends Declaracao {
 	public boolean checaTipo(AmbienteCompilacaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException,
 			IdentificadorNaoDeclaradoException, EntradaVaziaException {
+
 		boolean resposta;
 
 		ambiente.map(id, defProcedimento.getTipo());
 
-		ListaDeclaracaoParametro parametrosFormais = getDefProcedimento()
-				.getParametrosFormais();
+		ListaDeclaracaoParametro parametrosFormais = getDefProcedimento().getParametrosFormais();
+
 		if (parametrosFormais.checaTipo(ambiente)) {
 			ambiente.incrementa();
 			ambiente = parametrosFormais.elabora(ambiente);
+
 			resposta = getDefProcedimento().getComando().checaTipo(ambiente);
+
+			if(getDefProcedimento().getComando().contemReturn()){
+				Tipo tipoRetornado = getDefProcedimento().getComando.getTipoRetorno();
+				getDefProcedimento().setTipoRetorno(tipoRetornado);
+
+				if(getDefProcedimento().retornaValor()){
+					Tipo tipoDeclarado = getDefProcedimento().getTipoRetorno();
+
+					if(!tipoDeclarado.eIgual(tipoRetornado)){
+						resposta = false;
+					}
+				}
+			} else {
+				if(getDefProcedimento().retornaValor()){
+					resposta = false;
+				}
+			}
+
 			ambiente.restaura();
 		} else {
 			resposta = false;
 		}
+
 		return resposta;
 	}
 
