@@ -6,12 +6,12 @@ import li2.plp.expressions2.memory.IdentificadorJaDeclaradoException;
 import li2.plp.expressions2.memory.IdentificadorNaoDeclaradoException;
 import li2.plp.expressions2.memory.VariavelJaDeclaradaException;
 import li2.plp.expressions2.memory.VariavelNaoDeclaradaException;
-import li2.plp.imperative1.command.Comando;
 import li2.plp.imperative1.memory.AmbienteCompilacaoImperativa;
 import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
 import li2.plp.imperative1.memory.EntradaVaziaException;
 import li2.plp.imperative1.memory.ErroTipoEntradaException;
 import li2.plp.imperative1.memory.ListaValor;
+import li2.plp.imperative1.command.Comando;
 import li2.plp.imperative2.declaration.DefProcedimento;
 import li2.plp.imperative2.declaration.ListaDeclaracaoParametro;
 import li2.plp.imperative2.memory.AmbienteExecucaoImperativa2;
@@ -107,5 +107,39 @@ public class ChamadaProcedimento implements Comando {
 
 	public List<Id> getDecorators(){
 		return decorators;
+	}
+
+	public boolean contemReturn(AmbienteExecucaoImperativa ambiente) {
+		try {
+			AmbienteExecucaoImperativa2 ambiente2 = (AmbienteExecucaoImperativa2) ambiente;
+			DefProcedimento procedimento = ambiente2.getProcedimento(nomeProcedimento);
+
+			return procedimento.getComando().contemReturn();
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public Tipo getTipoRetorno(AmbienteExecucaoImperativa ambiente){
+		try{
+			DefProcedimento procedimento = ((AmbienteExecucaoImperativa2) ambiente).getProcedimento(nomeProcedimento);
+
+ 			if (procedimento.getComando().contemReturn()) {
+            return procedimento.getComando().getTipoRetorno();
+        	}
+    	} catch (Exception e) {
+    		return null;
+    	}
+    	return null;
+	}
+
+	@Override
+	public Tipo getTipoRetorno() {
+		return null;
+	}
+
+	@Override
+	public boolean contemReturn() {
+		return false;
 	}
 }

@@ -1,5 +1,6 @@
 package li2.plp.imperative1.command;
 
+import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
 import li2.plp.imperative1.memory.AmbienteCompilacaoImperativa;
@@ -45,4 +46,13 @@ public class Write implements IO {
 		return expressao.checaTipo(ambiente);
 	}
 
+	@Override
+	public boolean contemReturn(){
+		return false;
+	}
+
+	@Override
+	public Tipo getTipoRetorno(){
+		return null;
+	}
 }

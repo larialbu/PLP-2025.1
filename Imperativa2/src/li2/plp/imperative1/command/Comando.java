@@ -6,6 +6,7 @@ package li2.plp.imperative1.command;
  tem efeito colateral.
  */
 
+import li2.plp.expressions1.util.Tipo;
 import li2.plp.imperative1.memory.AmbienteCompilacaoImperativa;
 import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
 import li2.plp.imperative1.memory.EntradaVaziaException;
@@ -42,4 +43,8 @@ public interface Comando {
 	boolean checaTipo(AmbienteCompilacaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException,
 			IdentificadorNaoDeclaradoException, EntradaVaziaException;
+
+	boolean contemReturn();
+
+	Tipo getTipoRetorno();
 }

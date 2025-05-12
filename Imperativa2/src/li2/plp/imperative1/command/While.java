@@ -1,5 +1,6 @@
 package li2.plp.imperative1.command;
 
+import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.expressions2.expression.ValorBooleano;
 import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
@@ -56,6 +57,24 @@ public class While implements Comando {
 		return expressao.checaTipo(ambiente)
 				&& expressao.getTipo(ambiente).eBooleano()
 				&& comando.checaTipo(ambiente);
+	}
+
+	@Override
+	public boolean contemReturn(){
+		return comando.contemReturn();
+	}
+
+	@Override
+	public Tipo getTipoRetorno(){
+		if(comando.contemReturn()){
+			Tipo tipoRetorno = comando.getTipoRetorno();
+
+			if(tipoRetorno == null){
+				return null;
+			}
+			return tipoRetorno;
+		}
+		return null;
 	}
 
 }

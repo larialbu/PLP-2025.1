@@ -1,5 +1,6 @@
 package li2.plp.imperative1.command;
 
+import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.memory.VariavelJaDeclaradaException;
@@ -52,6 +53,16 @@ public class Atribuicao implements Comando {
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
 		return expressao.checaTipo(ambiente)
 				&& id.getTipo(ambiente).eIgual(expressao.getTipo(ambiente));
+	}
+
+	@Override
+	public boolean contemReturn(){
+		return false;
+	}
+
+	@Override
+	public Tipo getTipoRetorno(){
+		return null;
 	}
 
 }

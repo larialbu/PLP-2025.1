@@ -1,5 +1,6 @@
 package li2.plp.imperative2.command;
 
+import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.imperative1.command.Comando;
 import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
@@ -28,5 +29,23 @@ public class ComandoReturn implements Comando{
     public boolean checaTipo(li2.plp.imperative1.memory.AmbienteCompilacaoImperativa amb)
             throws IdentificadorNaoDeclaradoException, IdentificadorJaDeclaradoException {
         return expressao.checaTipo(amb);
+    }
+
+    @Override
+    public boolean contemReturn(){
+        return true;
+    }
+
+    public Tipo getTipoRetorno(li2.plp.imperative1.memory.AmbienteCompilacaoImperativa amb){
+        return expressao.getTipo(amb);
+    }
+
+    public Tipo getTipoRetorno(li2.plp.expressions2.memory.AmbienteCompilacao amb) {
+        return expressao.getTipo(amb);
+    }
+
+    @Override
+    public Tipo getTipoRetorno(){
+        return null;
     }
 }

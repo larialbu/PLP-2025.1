@@ -1,5 +1,6 @@
 package li2.plp.imperative1.command;
 
+import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions2.memory.IdentificadorJaDeclaradoException;
 import li2.plp.expressions2.memory.IdentificadorNaoDeclaradoException;
 import li2.plp.imperative1.declaration.Declaracao;
@@ -55,4 +56,22 @@ public class ComandoDeclaracao implements Comando {
 		return resposta;
 	}
 
+	@Override
+	public boolean contemReturn(){
+		return comando.contemReturn();
+	}
+
+	@Override
+	public Tipo getTipoRetorno(){
+		if(comando.contemReturn()){
+			Tipo tipoRetorno = comando.getTipoRetorno();
+
+			if(tipoRetorno == null){
+				return null;
+			}
+
+			return tipoRetorno;
+		}
+		return null;
+	}
 }

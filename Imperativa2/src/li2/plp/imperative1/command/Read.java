@@ -1,5 +1,6 @@
 package li2.plp.imperative1.command;
 
+import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.expression.Valor;
 import li2.plp.expressions2.memory.VariavelJaDeclaradaException;
@@ -60,6 +61,16 @@ public class Read implements IO {
 			VariavelJaDeclaradaException {
 		//return id.getTipo(ambiente).equals(ambiente.getTipoEntrada());
 		return true;
+	}
+
+	@Override
+	public boolean contemReturn(){
+		return false;
+	}
+
+	@Override
+	public Tipo getTipoRetorno(){
+		return null;
 	}
 
 }

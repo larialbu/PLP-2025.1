@@ -53,15 +53,11 @@ public class DeclaracaoProcedimento extends Declaracao {
 			resposta = getDefProcedimento().getComando().checaTipo(ambiente);
 
 			if(getDefProcedimento().getComando().contemReturn()){
-				Tipo tipoRetornado = getDefProcedimento().getComando.getTipoRetorno();
+				Tipo tipoRetornado = getDefProcedimento().getComando().getTipoRetorno();
 				getDefProcedimento().setTipoRetorno(tipoRetornado);
 
-				if(getDefProcedimento().retornaValor()){
-					Tipo tipoDeclarado = getDefProcedimento().getTipoRetorno();
-
-					if(!tipoDeclarado.eIgual(tipoRetornado)){
-						resposta = false;
-					}
+				if(getDefProcedimento().retornaValor() && !getDefProcedimento().getTipoRetorno().eIgual(tipoRetornado)){
+					resposta = false;
 				}
 			} else {
 				if(getDefProcedimento().retornaValor()){

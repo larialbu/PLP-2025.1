@@ -1,5 +1,6 @@
 package li2.plp.imperative1.command;
 
+import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.expressions2.expression.ValorBooleano;
 import li2.plp.expressions2.memory.IdentificadorJaDeclaradoException;
@@ -8,6 +9,7 @@ import li2.plp.imperative1.memory.AmbienteCompilacaoImperativa;
 import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
 import li2.plp.imperative1.memory.EntradaVaziaException;
 import li2.plp.imperative1.memory.ErroTipoEntradaException;
+import li2.plp.imperative2.memory.TiposRetornoIncompativeisException;
 
 public class IfThenElse implements Comando {
 
@@ -63,4 +65,33 @@ public class IfThenElse implements Comando {
 				&& comandoElse.checaTipo(ambiente);
 	}
 
+	@Override
+	public boolean contemReturn(){
+		return comandoThen.contemReturn() && comandoElse.contemReturn();
+	}
+
+	@Override
+	public Tipo getTipoRetorno(){
+		if(this.contemReturn()){
+			Tipo tipoThen = comandoThen.getTipoRetorno();
+			Tipo tipoElse = comandoElse.getTipoRetorno();
+
+			if (tipoThen != null && tipoElse != null) {
+				if (tipoThen.eIgual(tipoElse)) {
+					return tipoThen;
+				} else {
+					throw new TiposRetornoIncompativeisException(
+						"Tipos de retorno diferentes: " + tipoThen + " e " + tipoElse
+					);
+				}
+			} else if (tipoThen != null ^ tipoElse != null) {
+				throw new TiposRetornoIncompativeisException(
+					"Apenas um dos ramos do if contém comando de retorno"
+				);
+			} else {
+				return null;  // Se nenhum dos ramos retornar um tipo
+			}
+		}
+		return null;  // Se não houver nenhum `return` nos ramos
+		}
 }
