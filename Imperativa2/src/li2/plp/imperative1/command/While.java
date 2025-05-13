@@ -65,9 +65,10 @@ public class While implements Comando {
 	}
 
 	@Override
-	public Tipo getTipoRetorno(){
+	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
+		System.out.println("ENTROU EM WHILE");
 		if(comando.contemReturn()){
-			Tipo tipoRetorno = comando.getTipoRetorno();
+			Tipo tipoRetorno = comando.getTipoRetorno(amb);
 
 			if(tipoRetorno == null){
 				return null;

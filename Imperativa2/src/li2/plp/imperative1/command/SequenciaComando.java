@@ -56,9 +56,10 @@ public class SequenciaComando implements Comando {
 	}
 
 	@Override
-	public Tipo getTipoRetorno(){
-		Tipo tipo1 = comando1.getTipoRetorno();
-		Tipo tipo2 = comando2.getTipoRetorno();
+	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
+		System.out.println("ENTROU EM SEQUENCIACOMANDO");
+		Tipo tipo1 = comando1.getTipoRetorno(amb);
+		Tipo tipo2 = comando2.getTipoRetorno(amb);
 
 		if(tipo1 != null && tipo2 != null){
 			if(tipo1.eIgual(tipo2)){

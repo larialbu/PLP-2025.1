@@ -46,5 +46,5 @@ public interface Comando {
 
 	boolean contemReturn();
 
-	Tipo getTipoRetorno();
+	Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb);
 }

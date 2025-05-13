@@ -71,10 +71,11 @@ public class IfThenElse implements Comando {
 	}
 
 	@Override
-	public Tipo getTipoRetorno(){
+	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
+		System.out.println("ENTROU EM IFTHENELSE");
 		if(this.contemReturn()){
-			Tipo tipoThen = comandoThen.getTipoRetorno();
-			Tipo tipoElse = comandoElse.getTipoRetorno();
+			Tipo tipoThen = comandoThen.getTipoRetorno(amb);
+			Tipo tipoElse = comandoElse.getTipoRetorno(amb);
 
 			if (tipoThen != null && tipoElse != null) {
 				if (tipoThen.eIgual(tipoElse)) {

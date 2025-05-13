@@ -1,8 +1,10 @@
 package li2.plp.imperative2.declaration;
 
 import li2.plp.expressions1.util.Tipo;
+import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.imperative1.command.Comando;
 import li2.plp.imperative2.util.TipoProcedimento;
+import li2.plp.imperative1.memory.AmbienteCompilacaoImperativa;
 
 /**
  * Uma defini�ao de procedimento � uma declara�ao de comando e parametrosFormais
@@ -20,7 +22,7 @@ public class DefProcedimento {
 	 */
 	private Comando comando;
 
-	private Tipo tipoRetorno;
+	private Tipo tipoRetorno = TipoPrimitivo.VOID;
 
 	/**
 	 * Construtor
@@ -57,10 +59,7 @@ public class DefProcedimento {
 	}
 
 	public boolean retornaValor(){
-		if (this.tipoRetorno == null){
-			return false;
-		}
-		return true;
+		return !TipoPrimitivo.VOID.eIgual(this.tipoRetorno);
 	}
 
 	public void setTipoRetorno(Tipo tipo){
@@ -69,8 +68,13 @@ public class DefProcedimento {
 		}
 	}
 
-	public Tipo getTipoRetorno() {
-        return tipoRetorno;
+	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb) {
+		if(comando.contemReturn()){
+			System.out.println("ENTROU NO IF DE DEFPROCEDIMENTO");
+			return comando.getTipoRetorno(amb);
+		}
+		System.out.println("NAO ENTROU NO IF DE DEFPROCEDIMENTO");
+        return null;
     }
 
 	public Tipo getTipo() {

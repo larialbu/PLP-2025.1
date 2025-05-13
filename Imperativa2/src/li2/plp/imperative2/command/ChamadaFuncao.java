@@ -2,6 +2,7 @@ package li2.plp.imperative2.command;
 
 import java.util.List;
 import li2.plp.expressions1.util.Tipo;
+import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.expression.Valor;
@@ -14,7 +15,7 @@ import li2.plp.imperative2.declaration.DefProcedimento;
 import li2.plp.imperative2.declaration.ListaDeclaracaoParametro;
 
 import li2.plp.imperative2.command.ReturnException;
-import li2.plp.imperative2.command.ValorVoid;
+import li2.plp.expressions2.expression.ValorVoid;
 
 public class ChamadaFuncao implements Expressao {
 
@@ -86,10 +87,11 @@ public class ChamadaFuncao implements Expressao {
     @Override
     public Tipo getTipo(AmbienteCompilacao ambiente) {
         try {
+            System.out.println("ENTROU NO GETTIPPO DE CHAMADAFUNCAO");
             // Realiza o cast para o ambiente de compilação específico
             AmbienteCompilacaoImperativa aux = (AmbienteCompilacaoImperativa) ambiente;
             DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
-            return procedimento.getTipoRetorno();
+            return procedimento.getTipoRetorno(aux);
         } catch (Exception e) {
             return null;
         }

@@ -69,7 +69,8 @@ public class Read implements IO {
 	}
 
 	@Override
-	public Tipo getTipoRetorno(){
+	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
+		System.out.println("ENTROU EM READ");
 		return null;
 	}
 

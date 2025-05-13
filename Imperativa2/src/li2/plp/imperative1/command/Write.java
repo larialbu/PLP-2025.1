@@ -52,7 +52,8 @@ public class Write implements IO {
 	}
 
 	@Override
-	public Tipo getTipoRetorno(){
+	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
+		System.out.println("ENTROU EM WRITE");
 		return null;
 	}
 }

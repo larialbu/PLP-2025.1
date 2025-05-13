@@ -1,10 +1,12 @@
 package li2.plp.imperative2.declaration;
 
 import li2.plp.expressions1.util.Tipo;
+import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.memory.IdentificadorJaDeclaradoException;
 import li2.plp.expressions2.memory.IdentificadorNaoDeclaradoException;
 import li2.plp.imperative1.declaration.Declaracao;
+import li2.plp.imperative1.command.Comando;
 import li2.plp.imperative1.memory.AmbienteCompilacaoImperativa;
 import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
 import li2.plp.imperative1.memory.EntradaVaziaException;
@@ -44,28 +46,43 @@ public class DeclaracaoProcedimento extends Declaracao {
 
 		ambiente.map(id, defProcedimento.getTipo());
 
-		ListaDeclaracaoParametro parametrosFormais = getDefProcedimento().getParametrosFormais();
+		DefProcedimento procedimento = getDefProcedimento();
+		ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
 
 		if (parametrosFormais.checaTipo(ambiente)) {
 			ambiente.incrementa();
 			ambiente = parametrosFormais.elabora(ambiente);
 
-			resposta = getDefProcedimento().getComando().checaTipo(ambiente);
+			Comando comando = procedimento.getComando();
+			resposta = comando.checaTipo(ambiente);
 
-			if(getDefProcedimento().getComando().contemReturn()){
-				Tipo tipoRetornado = getDefProcedimento().getComando().getTipoRetorno();
-				getDefProcedimento().setTipoRetorno(tipoRetornado);
+			if (comando.contemReturn()) {
+				Tipo tipoRetornado = comando.getTipoRetorno(ambiente);
 
-				if(getDefProcedimento().retornaValor() && !getDefProcedimento().getTipoRetorno().eIgual(tipoRetornado)){
-					resposta = false;
+				procedimento.setTipoRetorno(tipoRetornado); // <- agora atualiza
+
+				if (!TipoPrimitivo.VOID.eIgual(tipoRetornado)) {
+					// Agora sim: procedimento *retorna valor*
+					Tipo tipoDeclarado = procedimento.getTipo();
+
+					if (!tipoDeclarado.eIgual(tipoRetornado)) {
+						resposta = false;
+					}
+				} else {
+					// Return do tipo VOID mas não devia retornar nada
+					if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipo())) {
+						resposta = false;
+					}
 				}
 			} else {
-				if(getDefProcedimento().retornaValor()){
+				// Se não tem return, o tipo declarado precisa ser VOID
+				if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipo())) {
 					resposta = false;
 				}
 			}
 
 			ambiente.restaura();
+			
 		} else {
 			resposta = false;
 		}

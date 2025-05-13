@@ -120,22 +120,20 @@ public class ChamadaProcedimento implements Comando {
 		}
 	}
 
-	public Tipo getTipoRetorno(AmbienteExecucaoImperativa ambiente){
+	@Override
+	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa ambiente){
 		try{
-			DefProcedimento procedimento = ((AmbienteExecucaoImperativa2) ambiente).getProcedimento(nomeProcedimento);
+			System.out.println("ENTROU EM GETTIPORETORNO CHAMADAPROCEDIMENTO");
+			DefProcedimento procedimento = ambiente.getProcedimento(nomeProcedimento);
 
  			if (procedimento.getComando().contemReturn()) {
-            return procedimento.getComando().getTipoRetorno();
+				System.out.println("ENTROU NO IF DE CHAMADAPROCEDIMENTO");
+            	return procedimento.getComando().getTipoRetorno(ambiente);
         	}
     	} catch (Exception e) {
     		return null;
     	}
     	return null;
-	}
-
-	@Override
-	public Tipo getTipoRetorno() {
-		return null;
 	}
 
 	@Override

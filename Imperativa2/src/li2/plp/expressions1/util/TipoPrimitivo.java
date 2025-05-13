@@ -37,6 +37,10 @@ public enum TipoPrimitivo implements Tipo {
 		return this.eIgual(INTEIRO);
 	}
 
+	public boolean eVoid(){
+		return this.eIgual(VOID);
+	}
+
 	/* (non-Javadoc)
 	 * @see li2.plp.expressions1.util.Tipo#eBooleano()
 	 */

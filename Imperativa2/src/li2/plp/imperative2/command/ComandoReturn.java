@@ -8,6 +8,7 @@ import li2.plp.imperative1.memory.EntradaVaziaException;
 import li2.plp.imperative1.memory.ErroTipoEntradaException;
 import li2.plp.expressions2.memory.IdentificadorJaDeclaradoException;
 import li2.plp.expressions2.memory.IdentificadorNaoDeclaradoException;
+import li2.plp.imperative2.memory.ErroTipoRetornoException;
 
 public class ComandoReturn implements Comando{
 
@@ -36,16 +37,16 @@ public class ComandoReturn implements Comando{
         return true;
     }
 
-    public Tipo getTipoRetorno(li2.plp.imperative1.memory.AmbienteCompilacaoImperativa amb){
-        return expressao.getTipo(amb);
-    }
-
-    public Tipo getTipoRetorno(li2.plp.expressions2.memory.AmbienteCompilacao amb) {
-        return expressao.getTipo(amb);
-    }
-
     @Override
-    public Tipo getTipoRetorno(){
-        return null;
+    public Tipo getTipoRetorno(li2.plp.imperative1.memory.AmbienteCompilacaoImperativa amb){
+        System.out.println("ENTROU EM COMANDORETURN");
+        if(expressao != null){
+            try{
+                return expressao.getTipo(amb);
+            } catch (Exception e){
+                throw new ErroTipoRetornoException();
+            }
+        }
+        throw new ErroTipoRetornoException("Proc tipo void, nenhum retorno esperado");
     }
 }
