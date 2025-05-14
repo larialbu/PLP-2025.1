@@ -32,24 +32,24 @@ public class ChamadaProcedimento implements Comando {
 		this.nomeProcedimento = nomeProcedimento;
 		this.parametrosReais = parametrosReais;
 		this.decorators = decorators;
+		System.out.println("ENTROU NO CONSTRUTOR DE CHAMADAPROCEDIMENTO");
 	}
 
 	public AmbienteExecucaoImperativa executar(AmbienteExecucaoImperativa amb)
 			throws IdentificadorNaoDeclaradoException,
 			IdentificadorJaDeclaradoException, EntradaVaziaException, ErroTipoEntradaException {
 		AmbienteExecucaoImperativa2 ambiente = (AmbienteExecucaoImperativa2) amb;
-		DefProcedimento procedimento = ambiente
-				.getProcedimento(nomeProcedimento);
+		DefProcedimento procedimento = ambiente.getProcedimento(nomeProcedimento);
+		System.out.println("ENTROU NO EXECUTAR DE CHAMADAPROCEDIMENTO");
 
 		/*
 		 * o incrementa e o restaura neste ponto servem para criar as variveis
 		 * que serao utilizadas pela execucao do procedimento
 		 */
 		ambiente.incrementa();
-		ListaDeclaracaoParametro parametrosFormais = procedimento
-				.getParametrosFormais();
-		AmbienteExecucaoImperativa2 aux = bindParameters(ambiente,
-				parametrosFormais);
+		ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
+		AmbienteExecucaoImperativa2 aux = bindParameters(ambiente, parametrosFormais);
+		System.out.println("ENTROU NO EXECUTAR DE CHAMADAPROCEDIMENTO");
 		for (int i = decorators.size()-1; i >= 0; i--){
 			Id decoratorId = decorators.get(i);
 			DefProcedimento decoratorProc = aux.getProcedimento(decoratorId);
@@ -72,6 +72,7 @@ public class ChamadaProcedimento implements Comando {
 			ListaDeclaracaoParametro parametrosFormais)
 			throws VariavelJaDeclaradaException, VariavelNaoDeclaradaException {
 		ListaValor listaValor = parametrosReais.avaliar(ambiente);
+		System.out.println("ENTROU NO BINDPARAMETERS DE CHAMADAPROCEDIMENTO");
 		while (listaValor.length() > 0) {
 			ambiente.map(parametrosFormais.getHead().getId(), listaValor
 					.getHead());
@@ -98,6 +99,7 @@ public class ChamadaProcedimento implements Comando {
 			IdentificadorNaoDeclaradoException {
 
 		Tipo tipoProcedimento = amb.get(this.nomeProcedimento);
+		System.out.println("ENTROU NO CHECATIPO DE CHAMADAPROCEDIMENTO");
 
 		TipoProcedimento tipoParametrosReais = new TipoProcedimento(
 				parametrosReais.getTipos(amb));
@@ -106,10 +108,12 @@ public class ChamadaProcedimento implements Comando {
 	}
 
 	public List<Id> getDecorators(){
+		System.out.println("ENTROU NO GETDECORATORS DE CHAMADAPROCEDIMENTO");
 		return decorators;
 	}
 
 	public boolean contemReturn(AmbienteExecucaoImperativa ambiente) {
+		System.out.println("ENTROU NO CONTEMRETURN AMB DE CHAMADAPROCEDIMENTO");
 		try {
 			AmbienteExecucaoImperativa2 ambiente2 = (AmbienteExecucaoImperativa2) ambiente;
 			DefProcedimento procedimento = ambiente2.getProcedimento(nomeProcedimento);
@@ -123,7 +127,7 @@ public class ChamadaProcedimento implements Comando {
 	@Override
 	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa ambiente){
 		try{
-			System.out.println("ENTROU EM GETTIPORETORNO CHAMADAPROCEDIMENTO");
+			System.out.println("ENTROU NO GETTIPORETORNO CHAMADAPROCEDIMENTO");
 			DefProcedimento procedimento = ambiente.getProcedimento(nomeProcedimento);
 
  			if (procedimento.getComando().contemReturn()) {
@@ -138,6 +142,7 @@ public class ChamadaProcedimento implements Comando {
 
 	@Override
 	public boolean contemReturn() {
+		System.out.println("ENTROU NO CONTEMRETURN DE CHAMADAPROCEDIMENTO");
 		return false;
 	}
 }

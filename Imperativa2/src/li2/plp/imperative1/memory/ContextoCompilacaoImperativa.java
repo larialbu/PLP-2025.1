@@ -29,6 +29,16 @@ public class ContextoCompilacaoImperativa extends ContextoCompilacao
         this.contextoProcedimentos = new Contexto<>();     
     }
 
+    public void incrementa(){
+        super.incrementa();
+        contextoProcedimentos.incrementa();
+    }
+
+    public void restaura(){
+        super.restaura();
+        contextoProcedimentos.restaura();
+    }
+
     public Tipo getTipoEntrada() throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException,
     		EntradaVaziaException {
         if(entrada == null || entrada.getHead() == null) {
@@ -42,6 +52,8 @@ public class ContextoCompilacaoImperativa extends ContextoCompilacao
     @Override
     public DefProcedimento getProcedimento(Id id) throws IdentificadorNaoDeclaradoException{
         try{
+            System.out.println("ENTROU NO GETPROCEDIMENTO DO AMBIENTECOMPILACAOIMPERATIVA PARA: " + id);
+            System.out.println(this.contextoProcedimentos);
             return this.contextoProcedimentos.get(id);
         } catch (VariavelNaoDeclaradaException e) {
             throw new IdentificadorNaoDeclaradoException("Identificador não declarado: " + id.getIdName());
@@ -49,7 +61,9 @@ public class ContextoCompilacaoImperativa extends ContextoCompilacao
     }
 
     public void mapProcedimento(Id id, DefProcedimento procedimento) throws IdentificadorJaDeclaradoException{
+        System.out.println("ENTROU NO MAPPROCEDIMENTO DO AMBIENTECOMPILACAOIMPERATIVA");
         try{
+            System.out.println(id + " " + procedimento);
             this.contextoProcedimentos.map(id, procedimento);
         } catch (VariavelJaDeclaradaException e){
             throw new IdentificadorNaoDeclaradoException("Identificador ja declarado: " + id.getIdName());

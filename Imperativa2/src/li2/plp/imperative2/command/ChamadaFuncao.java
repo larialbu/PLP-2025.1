@@ -25,6 +25,7 @@ public class ChamadaFuncao implements Expressao {
     public ChamadaFuncao(Id nomeProcedimento, ListaExpressao parametrosReais) {
         this.nomeProcedimento = nomeProcedimento;
         this.parametrosReais = parametrosReais;
+        System.out.println("ENTROU NO CONSTRUTOR DE CHAMADAFUNCAO");
     }
 
     @Override
@@ -32,7 +33,7 @@ public class ChamadaFuncao implements Expressao {
         try {
             AmbienteExecucaoImperativa2 aux = (AmbienteExecucaoImperativa2) ambiente;
             DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
-
+            System.out.println("ENTROU NO AVALIAR DE CHAMADAFUNCAO");
             if(!procedimento.retornaValor()){
                 throw new RuntimeException("Procedimento '" + nomeProcedimento + "' não retorna valor.");
             }
@@ -63,6 +64,7 @@ public class ChamadaFuncao implements Expressao {
             AmbienteExecucaoImperativa2 ambiente,
             ListaDeclaracaoParametro parametrosFormais) throws Exception {
         ListaValor listaValor = parametrosReais.avaliar(ambiente);
+        System.out.println("ENTROU NO BINNDPARAMETERS DE CHAMADAFUNCAO");
         while (listaValor.length() > 0) {
             ambiente.map(parametrosFormais.getHead().getId(), listaValor.getHead());
             parametrosFormais = (ListaDeclaracaoParametro) parametrosFormais.getTail();
@@ -76,9 +78,15 @@ public class ChamadaFuncao implements Expressao {
         try {
             // Realiza o cast para o ambiente de compilação específico
             AmbienteCompilacaoImperativa aux = (AmbienteCompilacaoImperativa) ambiente;
+            System.out.println("ENTROU NO CHECATIPO DE CHAMADAFUNCAO");
             DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
             ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
-            return parametrosReais.checaTipo(ambiente, parametrosFormais);
+
+
+            boolean parametrosOk = parametrosReais.checaTipo(ambiente, parametrosFormais);
+            boolean retornaValor = !TipoPrimitivo.VOID.eIgual(procedimento.getTipoRetorno(aux));
+            
+            return parametrosOk && retornaValor;
         } catch (Exception e) {
             return false;
         }
@@ -99,12 +107,14 @@ public class ChamadaFuncao implements Expressao {
 
     @Override
     public Expressao reduzir(AmbienteExecucao ambiente) {
+        System.out.println("ENTROU NO REDUZIR DE CHAMADAFUNCAO");
         // Para simplificação, pode retornar a própria expressão se não for possível reduzir.
         return this;
     }
 
     @Override
     public Expressao clone() {
+        System.out.println("ENTROU NO CLONE DE CHAMADAFUNCAO");
         return new ChamadaFuncao(this.nomeProcedimento, this.parametrosReais);
     }
 }

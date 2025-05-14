@@ -63,9 +63,7 @@ public class DefProcedimento {
 	}
 
 	public void setTipoRetorno(Tipo tipo){
-		if(tipo != null){
 			this.tipoRetorno = tipo;
-		}
 	}
 
 	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb) {
@@ -74,10 +72,11 @@ public class DefProcedimento {
 			return comando.getTipoRetorno(amb);
 		}
 		System.out.println("NAO ENTROU NO IF DE DEFPROCEDIMENTO");
-        return null;
+        return TipoPrimitivo.VOID;
     }
 
 	public Tipo getTipo() {
+		System.out.println("ENTROU NO GETTIPO DO DEFPROCEDIMENTO: " + parametrosFormais.getTipos());
 		return new TipoProcedimento(parametrosFormais.getTipos());
 	}
 }

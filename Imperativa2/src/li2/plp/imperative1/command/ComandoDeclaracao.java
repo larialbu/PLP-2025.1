@@ -1,6 +1,7 @@
 package li2.plp.imperative1.command;
 
 import li2.plp.expressions1.util.Tipo;
+import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.memory.IdentificadorJaDeclaradoException;
 import li2.plp.expressions2.memory.IdentificadorNaoDeclaradoException;
 import li2.plp.imperative1.declaration.Declaracao;
@@ -18,6 +19,7 @@ public class ComandoDeclaracao implements Comando {
 	public ComandoDeclaracao(Declaracao declaracao, Comando comando) {
 		this.declaracao = declaracao;
 		this.comando = comando;
+		System.out.println("ENTROU NO CONSTRUTOR DO COMANDODECLARACAO");
 	}
 
 	/**
@@ -35,9 +37,13 @@ public class ComandoDeclaracao implements Comando {
 			AmbienteExecucaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException,
 			IdentificadorNaoDeclaradoException, EntradaVaziaException, ErroTipoEntradaException {
+		System.out.println("ENTROU NO EXECUTAR DO COMANDODECLARACAO");
 		ambiente.incrementa();
-		ambiente = comando.executar(declaracao.elabora(ambiente));
+		System.out.println(comando + " " + declaracao);
+		ambiente = declaracao.elabora(ambiente);
+		ambiente = comando.executar(ambiente);
 		ambiente.restaura();
+		System.out.println("SAIU DO EXECUTAR DO COMANDODECLARACAO");
 		return ambiente;
 	}
 
@@ -49,30 +55,38 @@ public class ComandoDeclaracao implements Comando {
 			throws IdentificadorJaDeclaradoException,
 			IdentificadorNaoDeclaradoException, EntradaVaziaException {
 		boolean resposta;
+		System.out.println("ENTROU NO CHECATIPO DE COMANDODECLARACAO");
 		ambiente.incrementa();
+		System.out.println(comando + " " + declaracao);
 		resposta = declaracao.checaTipo(ambiente)
 				&& comando.checaTipo(ambiente);
-		ambiente.restaura();
+		System.out.println(declaracao.checaTipo(ambiente));
+		System.out.println(comando.checaTipo(ambiente));
+		ambiente.restaura();		
+		System.out.println("SAIU DO CHECATIPO DO COMANDODECLARACAO: " + resposta);
 		return resposta;
 	}
 
 	@Override
 	public boolean contemReturn(){
+		System.out.println("ENTROU NO CONTEMRETURN DO COMANDODECLARACAO");
 		return comando.contemReturn();
 	}
 
 	@Override
 	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
-		System.out.println("ENTROU EM COMANDODECLARACAO");
+		System.out.println("ENTROU NO GETTIPORETORNO DO COMANDODECLARACAO");
 		if(comando.contemReturn()){
 			Tipo tipoRetorno = comando.getTipoRetorno(amb);
 
-			if(tipoRetorno == null){
-				return null;
+			if(tipoRetorno == TipoPrimitivo.VOID){
+				System.out.println("SAIU DO GETTIPORETORNO DO COMANDODECLARACAO (VOID)");
+				return TipoPrimitivo.VOID;
 			}
-
+			System.out.println("SAIU DO GETTIPORETORNO DO COMANDODECLARACAO");
 			return tipoRetorno;
 		}
-		return null;
+		System.out.println("SAIU DO GETTIPORETORNO DO COMANDODECLARACAO (VOID)");
+		return TipoPrimitivo.VOID;
 	}
 }

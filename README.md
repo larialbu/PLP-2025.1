@@ -167,7 +167,7 @@ Igualmente, decorators encadeáveis podem ser definidos da seguinte forma:
               | <a href="../plp/Imperativa2/src/li2/plp/imperative2/command/ChamadaProcedimento.java">ChamadaProcedimento</a>
               | Retorno
 
-Retorno ::= return Expressao
+Retorno ::= &quot;return&quot; Expressao
 
 Expressao ::= <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/Valor.java">Valor</a> 
                 | <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/ExpUnaria.java">ExpUnaria</a> 
@@ -175,7 +175,7 @@ Expressao ::= <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/Va
                 | Id "(" [ ListaExpressao ] ")"    // <- Permite que associemos variáveis a funções e procedimentos, NÃO É UMA CHAMADA.
                 | Id
 
-DeclaracaoProcedimento ::= <a href="../plp/Imperativa2/src/li2/plp/imperative2/declaration/DeclaracaoProcedimento.java">&quot;proc&quot; Tipo Id &quot;(&quot; [ ListaDeclaracaoParametro ] &quot;)&quot; &quot;{&quot; Comando &quot;}&quot;</a>
+DeclaracaoProcedimento ::= <a href="../plp/Imperativa2/src/li2/plp/imperative2/declaration/DeclaracaoProcedimento.java">&quot;proc&quot; Tipo? Id &quot;(&quot; [ ListaDeclaracaoParametro ] &quot;)&quot; &quot;{&quot; Comando &quot;}&quot;</a>
 
 Tipo ::= TipoPrimitivo
        | TipoSubAlgoritmo

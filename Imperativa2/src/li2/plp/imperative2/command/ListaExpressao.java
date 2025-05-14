@@ -31,6 +31,7 @@ public class ListaExpressao extends Lista<Expressao> {
 
 	public ListaValor avaliar(AmbienteExecucaoImperativa ambiente)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
+		System.out.println("ENTROU NO AVALIAR DE LISTAEXPRESSAO");
 		if (length() >= 2)
 			return new ListaValor(getHead().avaliar(ambiente),
 					((ListaExpressao) getTail()).avaliar(ambiente));
@@ -44,7 +45,7 @@ public class ListaExpressao extends Lista<Expressao> {
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
 
 		List<Tipo> result = new LinkedList<Tipo>();
-
+		System.out.println("ENTROU NO GETTIPOS DE LISTAEXPRESSAO");
 		if (this.length() >= 2) {
 			result.add(getHead().getTipo(ambiente));
 			result.addAll(((ListaExpressao) getTail()).getTipos(ambiente));
@@ -57,7 +58,8 @@ public class ListaExpressao extends Lista<Expressao> {
 	public boolean checaTipo(AmbienteCompilacao ambiente, ListaDeclaracaoParametro parametrosFormais) 
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
 		List<Tipo> tiposReais = this.getTipos((AmbienteCompilacaoImperativa) ambiente);
-
+		System.out.println("ENTROU NO CHECATIPO DE LISTAEXPRESSAO");
+		
 		if(tiposReais.size() != parametrosFormais.length()){
 			return false;
 		}

@@ -53,15 +53,19 @@ public class ListaDeclaracaoParametro extends Lista<DeclaracaoParametro> {
 			AmbienteCompilacaoImperativa ambiente)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
 		AmbienteCompilacaoImperativa resposta;
+		System.out.println("ENTROU NO ELABORA DO LISTADECLARACAOPARAMETRO");
 		if (getHead() != null) {
 			if (getTail() != null) {
 				resposta = ((ListaDeclaracaoParametro) getTail())
 						.elabora(getHead().elabora(ambiente));
+				System.out.println(resposta);
 			} else {
 				resposta = getHead().elabora(ambiente);
+				System.out.println(resposta);
 			}
 		} else {
 			resposta = ambiente;
+			System.out.println(resposta);
 		}
 		return resposta;
 	}

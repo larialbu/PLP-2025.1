@@ -16,6 +16,7 @@ public class ComandoReturn implements Comando{
 
     public ComandoReturn(Expressao expressao){
         this.expressao = expressao;
+        System.out.println("ENTROU NO CONSTRUTOR DE COMANDORETURN");
     }
 
     @Override
@@ -23,25 +24,29 @@ public class ComandoReturn implements Comando{
             throws IdentificadorNaoDeclaradoException, IdentificadorJaDeclaradoException,
                    EntradaVaziaException, ErroTipoEntradaException {
         //lança uma exceção especial para "interromper" e retornar o valor.
+        System.out.println("ENTROU NO EXECUTAR DE COMANDORETURN");
         throw new ReturnException(expressao.avaliar(amb));
     }
 
     @Override
     public boolean checaTipo(li2.plp.imperative1.memory.AmbienteCompilacaoImperativa amb)
             throws IdentificadorNaoDeclaradoException, IdentificadorJaDeclaradoException {
+        System.out.println("ENTROU NO CHECATIPO DE COMANDORETURN");
         return expressao.checaTipo(amb);
     }
 
     @Override
     public boolean contemReturn(){
+        System.out.println("ENTROU NO CONTEMRETURN DE COMANDORETURN");
         return true;
     }
 
     @Override
     public Tipo getTipoRetorno(li2.plp.imperative1.memory.AmbienteCompilacaoImperativa amb){
-        System.out.println("ENTROU EM COMANDORETURN");
+        System.out.println("ENTROU NO GETTIPORETORNO DE COMANDORETURN");
         if(expressao != null){
             try{
+                System.out.println("RETORNO DO TIPO: " + expressao.getTipo(amb));
                 return expressao.getTipo(amb);
             } catch (Exception e){
                 throw new ErroTipoRetornoException();

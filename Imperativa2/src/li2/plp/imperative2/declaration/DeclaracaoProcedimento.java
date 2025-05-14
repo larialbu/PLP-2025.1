@@ -21,6 +21,7 @@ public class DeclaracaoProcedimento extends Declaracao {
 		super();
 		this.id = id;
 		this.defProcedimento = defProcedimento;
+		System.out.println("ENTROU NO CONSTRUTOR DE DECLARACAOPROCEDIMENTO");
 	}
 
 	@Override
@@ -28,12 +29,14 @@ public class DeclaracaoProcedimento extends Declaracao {
 			AmbienteExecucaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException,
 			IdentificadorNaoDeclaradoException, EntradaVaziaException {
+		System.out.println("ENTROU NO ELABORA DE DECLARACAOPROCEDIMENTO");
 		((AmbienteExecucaoImperativa2) ambiente).mapProcedimento(getId(),
 				getDefProcedimento());
 		return ambiente;
 	}
 
 	private Id getId() {
+		System.out.println("ENTROU NO GETID DE DECLARACAOPROCEDIMENTO");
 		return this.id;
 	}
 
@@ -43,13 +46,18 @@ public class DeclaracaoProcedimento extends Declaracao {
 			IdentificadorNaoDeclaradoException, EntradaVaziaException {
 
 		boolean resposta;
+		System.out.println("ENTROU NO CHECATIPO DE DECLARACAOPROCEDIMENTO para: " + id + " " + defProcedimento.getTipo());
 
 		ambiente.map(id, defProcedimento.getTipo());
+		//ambiente.mapProcedimento(id, defProcedimento);
+
 
 		DefProcedimento procedimento = getDefProcedimento();
 		ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
 
 		if (parametrosFormais.checaTipo(ambiente)) {
+			System.out.println("PRIMEIRO IF DE CHECATIPO");
+
 			ambiente.incrementa();
 			ambiente = parametrosFormais.elabora(ambiente);
 
@@ -57,26 +65,33 @@ public class DeclaracaoProcedimento extends Declaracao {
 			resposta = comando.checaTipo(ambiente);
 
 			if (comando.contemReturn()) {
+				System.out.println("SEGUNDO IF DE CHECATIPO");
 				Tipo tipoRetornado = comando.getTipoRetorno(ambiente);
 
-				procedimento.setTipoRetorno(tipoRetornado); // <- agora atualiza
+				procedimento.setTipoRetorno(tipoRetornado);
 
 				if (!TipoPrimitivo.VOID.eIgual(tipoRetornado)) {
-					// Agora sim: procedimento *retorna valor*
-					Tipo tipoDeclarado = procedimento.getTipo();
-
+					System.out.println("TERCEIRO IF DE CHECATIPO");
+					Tipo tipoDeclarado = procedimento.getTipoRetorno(ambiente);
+					System.out.println("Declarado: " + tipoDeclarado + ". Retornado: " + tipoRetornado);
 					if (!tipoDeclarado.eIgual(tipoRetornado)) {
+						System.out.println("QUARTO IF DE CHECATIPO");
 						resposta = false;
 					}
 				} else {
+						System.out.println("PRIMEIRO ELSE DE CHECATIPO");
 					// Return do tipo VOID mas não devia retornar nada
-					if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipo())) {
+					if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipoRetorno(ambiente))) {
+						System.out.println("QUINTO IF DE CHECATIPO");
 						resposta = false;
 					}
 				}
 			} else {
+				System.out.println("SEGUNDO ELSE DE CHECATIPO");
 				// Se não tem return, o tipo declarado precisa ser VOID
-				if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipo())) {
+				System.out.println("Declarado: " + procedimento.getTipoRetorno(ambiente));
+				if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipoRetorno(ambiente))) {
+					System.out.println("SEXTO IF DE CHECATIPO");
 					resposta = false;
 				}
 			}
@@ -91,6 +106,7 @@ public class DeclaracaoProcedimento extends Declaracao {
 	}
 
 	private DefProcedimento getDefProcedimento() {
+		System.out.println("ENTROU NO GETDEFPROCEDIMENTO DE DECLARACAOPROCEDIMENTO");
 		return this.defProcedimento;
 	}
 }
