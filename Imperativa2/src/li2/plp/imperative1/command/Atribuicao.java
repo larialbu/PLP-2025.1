@@ -57,12 +57,13 @@ public class Atribuicao implements Comando {
 
 	@Override
 	public boolean contemReturn(){
+		System.out.println("CONTEMRETURN: ATRIBUICAO");
 		return false;
 	}
 
 	@Override
 	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
-		System.out.println("ENTROU EM ATRIBUICAO");
+		System.out.println("GETTIPORETORNO: ATRIBUICAO");
 		return null;
 	}
 

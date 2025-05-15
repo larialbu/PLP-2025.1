@@ -22,7 +22,7 @@ public class DefProcedimento {
 	 */
 	private Comando comando;
 
-	private Tipo tipoRetorno = TipoPrimitivo.VOID;
+	private final Tipo tipoRetorno;
 
 	/**
 	 * Construtor
@@ -33,11 +33,10 @@ public class DefProcedimento {
 	 *            Declara�ao de Comando.
 	 */
 	public DefProcedimento(ListaDeclaracaoParametro parametrosFormais,
-			Comando comando) {
+			Comando comando, Tipo tipoRetorno) {
 		this.parametrosFormais = parametrosFormais;
 		this.comando = comando;
-
-		this.tipoRetorno = null;
+		this.tipoRetorno = tipoRetorno;
 	}
 
 	/**
@@ -62,22 +61,14 @@ public class DefProcedimento {
 		return !TipoPrimitivo.VOID.eIgual(this.tipoRetorno);
 	}
 
-	public void setTipoRetorno(Tipo tipo){
-			this.tipoRetorno = tipo;
-	}
-
 	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb) {
-		System.out.println("ENTROU NO GETTIPORETORNO DE DEFPROCEDIMENTO");
-		if(comando.contemReturn()){
-			System.out.println("ENTROU NO IF DE DEFPROCEDIMENTO: " + comando.getTipoRetorno(amb));
-			return comando.getTipoRetorno(amb);
-		}
-		System.out.println("SAIU DO GETTIPORETORNO DE DEFPROCEDIMENTO");
-        return TipoPrimitivo.VOID;
+		System.out.println("GETTIPORETORNO DE DEFPROCEDIMENTO");
+
+        return this.tipoRetorno;
     }
 
 	public Tipo getTipo() {
-		System.out.println("ENTROU NO GETTIPO DO DEFPROCEDIMENTO: " + parametrosFormais.getTipos());
+		System.out.println("GETTIPO DO DEFPROCEDIMENTO: " + parametrosFormais.getTipos());
 		return new TipoProcedimento(parametrosFormais.getTipos());
 	}
 }

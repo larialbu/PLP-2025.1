@@ -776,32 +776,32 @@ DeclaracaoComposta PDeclaracaoComposta():
 
 DeclaracaoProcedimento PDeclaracaoProcedimento():
 {
-    Tipo tipoRetorno = null;
+    Tipo tipoRetorno = TipoPrimitivo.VOID;
     Id nome;
     DefProcedimento defProcedimento;
 }
 {
     (
         LOOKAHEAD(<PROC> PTipo() PId() <LPAREN> <RPAREN>)
-        <PROC> tipoRetorno = PTipo() nome = PId() <LPAREN> <RPAREN> defProcedimento = PDefProcedimento()
+        <PROC> tipoRetorno = PTipo() nome = PId() <LPAREN> <RPAREN> defProcedimento = PDefProcedimento(tipoRetorno)
         |
         LOOKAHEAD(<PROC> PTipo() PId() <LPAREN>)
-        <PROC> tipoRetorno = PTipo() nome = PId() <LPAREN> defProcedimento = PDefProcedimento()
+        <PROC> tipoRetorno = PTipo() nome = PId() <LPAREN> defProcedimento = PDefProcedimento(tipoRetorno)
         |
         LOOKAHEAD(<PROC> PId() <LPAREN> <RPAREN>)
-        <PROC> nome = PId() <LPAREN> <RPAREN> defProcedimento = PDefProcedimento()
+        <PROC> nome = PId() <LPAREN> <RPAREN> defProcedimento = PDefProcedimento(tipoRetorno)
         |
-        <PROC> nome = PId() <LPAREN> defProcedimento = PDefProcedimento()
+        <PROC> nome = PId() <LPAREN> defProcedimento = PDefProcedimento(tipoRetorno)
     )
     {
-		defProcedimento.setTipoRetorno(tipoRetorno);
         return new DeclaracaoProcedimento(nome, defProcedimento);
     }
 }
-DefProcedimento PDefProcedimento():
+DefProcedimento PDefProcedimento(Tipo tipoRetorno):
 {
 	ListaDeclaracaoParametro listaPar = null;
 	Comando comando;
+	Tipo tipoFinal;
 }
 {
     (
@@ -812,7 +812,7 @@ DefProcedimento PDefProcedimento():
 	    if(listaPar == null) {
 	        listaPar = new ListaDeclaracaoParametro();
 	    }
-	    return new DefProcedimento (listaPar, comando);
+	    return new DefProcedimento (listaPar, comando, tipoRetorno);
 	}
 	
 }

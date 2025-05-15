@@ -48,8 +48,6 @@ public class DeclaracaoProcedimento extends Declaracao {
 		boolean resposta;
 		System.out.println("ENTROU NO CHECATIPO DE DECLARACAOPROCEDIMENTO para: " + id + " " + defProcedimento.getTipo());
 
-		System.out.println("id");
-
 		ambiente.map(id, defProcedimento.getTipo());
 		ambiente.mapProcedimento(id, defProcedimento);
 
@@ -69,8 +67,6 @@ public class DeclaracaoProcedimento extends Declaracao {
 			if (comando.contemReturn()) {
 				System.out.println("SEGUNDO IF DE CHECATIPO");
 				Tipo tipoRetornado = comando.getTipoRetorno(ambiente);
-
-				procedimento.setTipoRetorno(tipoRetornado);
 
 				if (!TipoPrimitivo.VOID.eIgual(tipoRetornado)) {
 					System.out.println("TERCEIRO IF DE CHECATIPO");
