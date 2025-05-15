@@ -172,7 +172,7 @@ Retorno ::= &quot;return&quot; Expressao
 Expressao ::= <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/Valor.java">Valor</a> 
                 | <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/ExpUnaria.java">ExpUnaria</a> 
                 | <a href="../plp/Imperativa2/src/li2/plp/expressions2/expression/ExpBinaria.java">ExpBinaria</a> 
-                | Id "(" [ ListaExpressao ] ")"    // <- Permite que associemos variáveis a funções e procedimentos, NÃO É UMA CHAMADA.
+                | Id "(" [ ListaExpressao ] ")"    // AJUSTAR ISSO, TA ESQUISITO SER EXPRESSAO
                 | Id
 
 DeclaracaoProcedimento ::= <a href="../plp/Imperativa2/src/li2/plp/imperative2/declaration/DeclaracaoProcedimento.java">&quot;proc&quot; Tipo? Id &quot;(&quot; [ ListaDeclaracaoParametro ] &quot;)&quot; &quot;{&quot; Comando &quot;}&quot;</a>

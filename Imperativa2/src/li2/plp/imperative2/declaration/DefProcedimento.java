@@ -67,11 +67,12 @@ public class DefProcedimento {
 	}
 
 	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb) {
+		System.out.println("ENTROU NO GETTIPORETORNO DE DEFPROCEDIMENTO");
 		if(comando.contemReturn()){
-			System.out.println("ENTROU NO IF DE DEFPROCEDIMENTO");
+			System.out.println("ENTROU NO IF DE DEFPROCEDIMENTO: " + comando.getTipoRetorno(amb));
 			return comando.getTipoRetorno(amb);
 		}
-		System.out.println("NAO ENTROU NO IF DE DEFPROCEDIMENTO");
+		System.out.println("SAIU DO GETTIPORETORNO DE DEFPROCEDIMENTO");
         return TipoPrimitivo.VOID;
     }
 

@@ -19,7 +19,7 @@ public class ComandoDeclaracao implements Comando {
 	public ComandoDeclaracao(Declaracao declaracao, Comando comando) {
 		this.declaracao = declaracao;
 		this.comando = comando;
-		System.out.println("ENTROU NO CONSTRUTOR DO COMANDODECLARACAO");
+		System.out.println("CONSTRUTOR DO COMANDODECLARACAO");
 	}
 
 	/**
@@ -57,11 +57,13 @@ public class ComandoDeclaracao implements Comando {
 		boolean resposta;
 		System.out.println("ENTROU NO CHECATIPO DE COMANDODECLARACAO");
 		ambiente.incrementa();
-		System.out.println(comando + " " + declaracao);
-		resposta = declaracao.checaTipo(ambiente)
-				&& comando.checaTipo(ambiente);
-		System.out.println(declaracao.checaTipo(ambiente));
-		System.out.println(comando.checaTipo(ambiente));
+
+		boolean decct = declaracao.checaTipo(ambiente);
+		System.out.println("COMANDODECLARACAO (DEC): " + declaracao + ": " + decct);
+		boolean comct = comando.checaTipo(ambiente);
+		System.out.println("COMANDODECLARACAO (COM): " + comando + ": " + comct);
+		resposta = decct && comct;
+
 		ambiente.restaura();		
 		System.out.println("SAIU DO CHECATIPO DO COMANDODECLARACAO: " + resposta);
 		return resposta;

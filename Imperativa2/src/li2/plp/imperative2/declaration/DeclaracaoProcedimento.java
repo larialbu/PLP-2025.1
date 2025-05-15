@@ -48,8 +48,10 @@ public class DeclaracaoProcedimento extends Declaracao {
 		boolean resposta;
 		System.out.println("ENTROU NO CHECATIPO DE DECLARACAOPROCEDIMENTO para: " + id + " " + defProcedimento.getTipo());
 
+		System.out.println("id");
+
 		ambiente.map(id, defProcedimento.getTipo());
-		//ambiente.mapProcedimento(id, defProcedimento);
+		ambiente.mapProcedimento(id, defProcedimento);
 
 
 		DefProcedimento procedimento = getDefProcedimento();
@@ -89,8 +91,9 @@ public class DeclaracaoProcedimento extends Declaracao {
 			} else {
 				System.out.println("SEGUNDO ELSE DE CHECATIPO");
 				// Se não tem return, o tipo declarado precisa ser VOID
-				System.out.println("Declarado: " + procedimento.getTipoRetorno(ambiente));
-				if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipoRetorno(ambiente))) {
+				Tipo tipoDeclarado = procedimento.getTipoRetorno(ambiente);
+				System.out.println("Declarado: " + tipoDeclarado);
+				if (!TipoPrimitivo.VOID.eIgual(tipoDeclarado)) {
 					System.out.println("SEXTO IF DE CHECATIPO");
 					resposta = false;
 				}
@@ -101,7 +104,7 @@ public class DeclaracaoProcedimento extends Declaracao {
 		} else {
 			resposta = false;
 		}
-
+		System.out.println("SAIU DO CHECATIPO DE DECLARACAOPROCEDIMENTO");
 		return resposta;
 	}
 

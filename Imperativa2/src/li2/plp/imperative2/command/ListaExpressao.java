@@ -47,11 +47,17 @@ public class ListaExpressao extends Lista<Expressao> {
 		List<Tipo> result = new LinkedList<Tipo>();
 		System.out.println("ENTROU NO GETTIPOS DE LISTAEXPRESSAO");
 		if (this.length() >= 2) {
+			System.out.println(result);
 			result.add(getHead().getTipo(ambiente));
+			System.out.println(result);
 			result.addAll(((ListaExpressao) getTail()).getTipos(ambiente));
+			System.out.println(result);
 		} else if (length() == 1) {
+			System.out.println(result + "else");
 			result.add(getHead().getTipo(ambiente));
 		}
+		System.out.println(result + "return");
+		System.out.println("SAIU DO GETTIPOS DE LISTAEXPRESSAO");
 		return result;
 	}
 

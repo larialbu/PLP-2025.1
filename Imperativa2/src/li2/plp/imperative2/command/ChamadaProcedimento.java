@@ -1,6 +1,7 @@
 package li2.plp.imperative2.command;
 
 import li2.plp.expressions1.util.Tipo;
+import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.memory.IdentificadorJaDeclaradoException;
 import li2.plp.expressions2.memory.IdentificadorNaoDeclaradoException;
@@ -32,7 +33,7 @@ public class ChamadaProcedimento implements Comando {
 		this.nomeProcedimento = nomeProcedimento;
 		this.parametrosReais = parametrosReais;
 		this.decorators = decorators;
-		System.out.println("ENTROU NO CONSTRUTOR DE CHAMADAPROCEDIMENTO");
+		System.out.println("CONSTRUTOR DE CHAMADAPROCEDIMENTO");
 	}
 
 	public AmbienteExecucaoImperativa executar(AmbienteExecucaoImperativa amb)
@@ -58,6 +59,7 @@ public class ChamadaProcedimento implements Comando {
 			aux.restaura();
 		}
 		aux = (AmbienteExecucaoImperativa2) procedimento.getComando().executar(aux);
+		System.out.println("SAIU DO EXECUTAR DE CHAMADAPROCEDIMENTO");
 		aux.restaura();
 		return aux;
 
@@ -80,6 +82,7 @@ public class ChamadaProcedimento implements Comando {
 					.getTail();
 			listaValor = (ListaValor) listaValor.getTail();
 		}
+		System.out.println("SAIU DO BINDPARAMETERS DE CHAMADAPROCEDIMENTO");
 		return ambiente;
 	}
 
@@ -103,12 +106,12 @@ public class ChamadaProcedimento implements Comando {
 
 		TipoProcedimento tipoParametrosReais = new TipoProcedimento(
 				parametrosReais.getTipos(amb));
+		System.out.println("SAIU DO CHECATIPO DE CHAMADAPROCEDIMENTO");	
 		return tipoProcedimento.eIgual(tipoParametrosReais);
-
 	}
 
 	public List<Id> getDecorators(){
-		System.out.println("ENTROU NO GETDECORATORS DE CHAMADAPROCEDIMENTO");
+		System.out.println("GETDECORATORS DE CHAMADAPROCEDIMENTO");
 		return decorators;
 	}
 
@@ -118,8 +121,10 @@ public class ChamadaProcedimento implements Comando {
 			AmbienteExecucaoImperativa2 ambiente2 = (AmbienteExecucaoImperativa2) ambiente;
 			DefProcedimento procedimento = ambiente2.getProcedimento(nomeProcedimento);
 
+			System.out.println("SAIU DO CONTEMRETURN DE CHAMADAPROCEDIMENTO");
 			return procedimento.getComando().contemReturn();
 		} catch (Exception e) {
+			System.out.println("SAIU DO CONTEMRETURN DE CHAMADAPROCEDIMENTO");
 			return false;
 		}
 	}
@@ -131,13 +136,14 @@ public class ChamadaProcedimento implements Comando {
 			DefProcedimento procedimento = ambiente.getProcedimento(nomeProcedimento);
 
  			if (procedimento.getComando().contemReturn()) {
-				System.out.println("ENTROU NO IF DE CHAMADAPROCEDIMENTO");
+				System.out.println("SAIU DO GETTIPORETORNO DE CHAMADAPROCEDIMENTO");
             	return procedimento.getComando().getTipoRetorno(ambiente);
         	}
     	} catch (Exception e) {
+			System.out.println("SAIU DO GETTIPORETORNO (EXCEPTION) DE CHAMADAPROCEDIMENTO");
     		return null;
     	}
-    	return null;
+    	return TipoPrimitivo.VOID;
 	}
 
 	@Override

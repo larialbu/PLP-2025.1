@@ -25,15 +25,15 @@ public class ChamadaFuncao implements Expressao {
     public ChamadaFuncao(Id nomeProcedimento, ListaExpressao parametrosReais) {
         this.nomeProcedimento = nomeProcedimento;
         this.parametrosReais = parametrosReais;
-        System.out.println("ENTROU NO CONSTRUTOR DE CHAMADAFUNCAO");
+        System.out.println("CONSTRUTOR DE CHAMADAFUNCAO");
     }
 
     @Override
     public Valor avaliar(AmbienteExecucao ambiente) {
+        System.out.println("ENTROU NO AVALIAR DE CHAMADAFUNCAO");
         try {
             AmbienteExecucaoImperativa2 aux = (AmbienteExecucaoImperativa2) ambiente;
             DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
-            System.out.println("ENTROU NO AVALIAR DE CHAMADAFUNCAO");
             if(!procedimento.retornaValor()){
                 throw new RuntimeException("Procedimento '" + nomeProcedimento + "' não retorna valor.");
             }
@@ -52,9 +52,11 @@ public class ChamadaFuncao implements Expressao {
                 aux.restaura();
             }
 
+            System.out.println("SAIU DO AVALIAR DE CHAMADAFUNCAO");
             return retorno;
 
         } catch (Exception e) {
+            System.out.println("SAIU (EXCEPTION) DO AVALIAR DE CHAMADAFUNCAO");
             throw new RuntimeException("Erro durante a avaliação da função: " + e.getMessage(), e);
         }
     }
@@ -70,6 +72,7 @@ public class ChamadaFuncao implements Expressao {
             parametrosFormais = (ListaDeclaracaoParametro) parametrosFormais.getTail();
             listaValor = (ListaValor) listaValor.getTail();
         }
+        System.out.println("SAIU DO BINNDPARAMETERS DE CHAMADAFUNCAO");
         return ambiente;
     }
 
@@ -77,15 +80,22 @@ public class ChamadaFuncao implements Expressao {
     public boolean checaTipo(AmbienteCompilacao ambiente) {
         try {
             // Realiza o cast para o ambiente de compilação específico
-            AmbienteCompilacaoImperativa aux = (AmbienteCompilacaoImperativa) ambiente;
             System.out.println("ENTROU NO CHECATIPO DE CHAMADAFUNCAO");
+            
+            AmbienteCompilacaoImperativa aux = (AmbienteCompilacaoImperativa) ambiente;
+            System.out.println("PASSOU 1");
+            
+            System.out.println("AQUI O RESTAURA JA FOI CHAMADO E O PROCEDIMENTO NAO TA MAIS NO AMBIENTE");
             DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
+            System.out.println("PASSOU 2");
+            
             ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
-
+            System.out.println("PASSOU 3");
 
             boolean parametrosOk = parametrosReais.checaTipo(ambiente, parametrosFormais);
             boolean retornaValor = !TipoPrimitivo.VOID.eIgual(procedimento.getTipoRetorno(aux));
             
+            System.out.println("SAIU DO CHECATIPO DE CHAMADAFUNCAO");
             return parametrosOk && retornaValor;
         } catch (Exception e) {
             return false;
@@ -99,6 +109,7 @@ public class ChamadaFuncao implements Expressao {
             // Realiza o cast para o ambiente de compilação específico
             AmbienteCompilacaoImperativa aux = (AmbienteCompilacaoImperativa) ambiente;
             DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
+            System.out.println("SAIU DO GETTIPO DE CHAMADAFUNCAO");
             return procedimento.getTipoRetorno(aux);
         } catch (Exception e) {
             return null;
@@ -107,14 +118,14 @@ public class ChamadaFuncao implements Expressao {
 
     @Override
     public Expressao reduzir(AmbienteExecucao ambiente) {
-        System.out.println("ENTROU NO REDUZIR DE CHAMADAFUNCAO");
+        System.out.println("REDUZIR DE CHAMADAFUNCAO");
         // Para simplificação, pode retornar a própria expressão se não for possível reduzir.
         return this;
     }
 
     @Override
     public Expressao clone() {
-        System.out.println("ENTROU NO CLONE DE CHAMADAFUNCAO");
+        System.out.println("CLONE DE CHAMADAFUNCAO");
         return new ChamadaFuncao(this.nomeProcedimento, this.parametrosReais);
     }
 }
