@@ -68,7 +68,23 @@ public class DeclaracaoProcedimento extends Declaracao {
 				System.out.println("SEGUNDO IF DE CHECATIPO");
 				Tipo tipoRetornado = comando.getTipoRetorno(ambiente);
 
-				if (!TipoPrimitivo.VOID.eIgual(tipoRetornado)) {
+				// Verificação específica para tipos função
+				if (tipoRetornado instanceof TipoSubAlgoritmo) {
+					TipoSubAlgoritmo tipoRetornadoFunc = (TipoSubAlgoritmo) tipoRetornado;
+					Tipo tipoDeclarado = procedimento.getTipoRetorno(ambiente);
+
+					if (tipoDeclarado instanceof TipoSubAlgoritmo) {
+						TipoSubAlgoritmo tipoDeclaradoFunc = (TipoSubAlgoritmo) tipoDeclarado;
+
+						if (!tipoRetornadoFunc.eIgual(tipoDeclaradoFunc)) {
+							System.out.println("TIPO FUNÇÃO NÃO COMPATÍVEL");
+							resposta = false;
+						}
+					} else {
+						System.out.println("ERRO: Tipo declarado não é função.");
+						resposta = false;
+					}
+				} else if (!TipoPrimitivo.VOID.eIgual(tipoRetornado)) {
 					System.out.println("TERCEIRO IF DE CHECATIPO");
 					Tipo tipoDeclarado = procedimento.getTipoRetorno(ambiente);
 					System.out.println("Declarado: " + tipoDeclarado + ". Retornado: " + tipoRetornado);
@@ -77,7 +93,7 @@ public class DeclaracaoProcedimento extends Declaracao {
 						resposta = false;
 					}
 				} else {
-						System.out.println("PRIMEIRO ELSE DE CHECATIPO");
+					System.out.println("RETURN VOID MAS NAO DEVIA RETORNAR NADA");
 					// Return do tipo VOID mas não devia retornar nada
 					if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipoRetorno(ambiente))) {
 						System.out.println("QUINTO IF DE CHECATIPO");

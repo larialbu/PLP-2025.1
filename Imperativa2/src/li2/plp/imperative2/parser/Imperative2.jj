@@ -142,6 +142,7 @@ TOKEN : /* TOKENS DOS POSS�VEIS TIPOS */
 | < BOOLEAN  : "boolean" >
 | < STRING  : "string" >
 | < VOID : "void" >
+| < FUNC : "func" >
 
 }
 
@@ -227,6 +228,7 @@ TOKEN : /* SEPARATORS */
 | < SEMICOLON: ";" >
 | < COMMA: "," >
 | < DOT: "." >
+| < ARROW: "->" >
 }
 
 TOKEN : /* OPERATORS */
@@ -820,17 +822,34 @@ DefProcedimento PDefProcedimento(Tipo tipoRetorno):
 Tipo PTipo():
 {
 	Tipo tipo;
+	Tipo retorno;
+	ListaTipos parametros;
 }
 {
 	(
 	<INT> {tipo = TipoPrimitivo.INTEIRO;} |
 	<BOOLEAN> {tipo = TipoPrimitivo.BOOLEANO;} |
 	<STRING> {tipo = TipoPrimitivo.STRING;} |
-	<VOID> {tipo = TipoPrimitivo.VOID;}
+	<VOID> {tipo = TipoPrimitivo.VOID;} |
+	<FUNC> <LPAREN> parametros = PListaTipos() <RPAREN>
+		<ARROW> retorno = PTipo() {tipo = new TipoSubAlgoritmo(parametros, retorno);}
 
 	)
 	{
 		return tipo;
+	}
+}
+
+ListaTipos PListaTipos():
+{
+	Tipo tipo;
+	ListaTipos lista = new ListaTipos();
+}
+{
+	tipo = PTipo() { lista.adicionar(tipo); }
+	(<COMMA> tipo = PTipo() { lista.adicionar(tipo); } )*
+	{
+		return lista;
 	}
 }
 
