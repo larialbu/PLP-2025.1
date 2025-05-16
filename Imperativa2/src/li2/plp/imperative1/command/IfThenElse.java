@@ -1,5 +1,7 @@
 package li2.plp.imperative1.command;
 
+import li2.plp.expressions1.util.Tipo;
+import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.expressions2.expression.ValorBooleano;
 import li2.plp.expressions2.memory.IdentificadorJaDeclaradoException;
@@ -8,6 +10,7 @@ import li2.plp.imperative1.memory.AmbienteCompilacaoImperativa;
 import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
 import li2.plp.imperative1.memory.EntradaVaziaException;
 import li2.plp.imperative1.memory.ErroTipoEntradaException;
+import li2.plp.imperative2.memory.TiposRetornoIncompativeisException;
 
 public class IfThenElse implements Comando {
 
@@ -22,6 +25,7 @@ public class IfThenElse implements Comando {
 		this.expressao = expressao;
 		this.comandoThen = comandoThen;
 		this.comandoElse = comandoElse;
+		System.out.println("CONSTRUTOR DE IFTHENELSE");
 	}
 
 	/**
@@ -63,4 +67,44 @@ public class IfThenElse implements Comando {
 				&& comandoElse.checaTipo(ambiente);
 	}
 
+	@Override
+	public boolean contemReturn(){
+		boolean cr = comandoThen.contemReturn() && comandoElse.contemReturn();
+		System.out.println("IFTHENELSE: CONTEMRETURN: " + cr);
+		return cr;
+	}
+
+	@Override
+	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
+		System.out.println("ENTROU EM GETTIPORETORNO DE IFTHENELSE");
+		if(this.contemReturn()){
+
+
+
+			Tipo tipoThen = comandoThen.getTipoRetorno(amb);
+			Tipo tipoElse = comandoElse.getTipoRetorno(amb);
+
+			boolean thenTemReturn = !(tipoThen instanceof TipoPrimitivo) || !((TipoPrimitivo) tipoThen).equals(TipoPrimitivo.VOID);
+			boolean elseTemReturn = !(tipoElse instanceof TipoPrimitivo) || !((TipoPrimitivo) tipoElse).equals(TipoPrimitivo.VOID);
+
+			if (thenTemReturn && elseTemReturn) {
+				if (tipoThen.eIgual(tipoElse)) {
+					System.out.println("Todos os tipos de retorno compativeis");
+					return tipoThen;
+				} else {
+					throw new TiposRetornoIncompativeisException(
+						"Tipos de retorno diferentes: " + tipoThen + " e " + tipoElse
+					);
+				}
+			} else if (thenTemReturn ^ elseTemReturn) {
+				throw new TiposRetornoIncompativeisException(
+					"Apenas um dos ramos do if contém comando de retorno"
+				);
+			} else {
+				System.out.println("Todos retornam void");
+				return TipoPrimitivo.VOID;  // Se nenhum dos ramos retornar um tipo
+			}
+		}
+		return TipoPrimitivo.VOID;  // Se não houver nenhum `return` nos ramos
+		}
 }

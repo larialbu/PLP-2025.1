@@ -132,6 +132,7 @@ TOKEN : /* TOKENS DE IMPERATIVA 2 */
 {
   < PROC: "proc" >
 | < CALL: "call" >
+| < RETURN: "return">
 | < AT: "@" >
 }
 
@@ -140,6 +141,7 @@ TOKEN : /* TOKENS DOS POSS�VEIS TIPOS */
   < INT : "int" >
 | < BOOLEAN  : "boolean" >
 | < STRING  : "string" >
+| < VOID : "void" >
 
 }
 
@@ -485,7 +487,9 @@ Expressao PExpPrimaria() :
 }
 {
 	(  
-	    retorno = PId()
+		LOOKAHEAD(<IDENTIFIER> <LPAREN>) 
+		retorno = PChamadaFuncao()
+	  | retorno = PId()
 	  | retorno = PValor() 
 	  | <LPAREN> retorno = PExpressao() <RPAREN>
 	)
@@ -494,6 +498,39 @@ Expressao PExpPrimaria() :
 	}
 }
 
+Expressao PChamadaFuncao() :
+{
+	Id id;
+	ListaExpressao listaExp;
+}
+{
+	id = PId()
+	<LPAREN> 
+	listaExp = PListaExpressaoOpt()
+	<RPAREN>
+	{
+		return new ChamadaFuncao(id, listaExp);
+	}
+}
+
+ListaExpressao PListaExpressaoOpt() :
+{
+    ListaExpressao lista = new ListaExpressao();
+	Expressao exp;
+}
+{
+    (
+        exp = PExpressao() {
+            lista = new ListaExpressao(exp);
+        } 
+        ( <COMMA> exp = PExpressao() {
+                lista = new ListaExpressao(exp, lista);
+        })*
+    )?
+    {
+        return lista;
+    }
+}
 
 Expressao PExpUnaria() :
 {
@@ -645,10 +682,22 @@ Comando PComandoSimples() :
       | retorno = PIO()
       | <LPAREN> retorno = PComando() <RPAREN>
       | retorno = PChamadaProcedimento()
+	  | retorno = PReturn()
    	)
     {
         return retorno;
     }
+}
+
+Comando PReturn() :
+{
+	Expressao exp;
+}
+{
+	<RETURN> exp = PExpressao()
+	{
+		return new ComandoReturn(exp);
+	}
 }
 
 ChamadaProcedimento PChamadaProcedimento():
@@ -727,25 +776,32 @@ DeclaracaoComposta PDeclaracaoComposta():
 
 DeclaracaoProcedimento PDeclaracaoProcedimento():
 {
-	Id nome;
-	DefProcedimento defProcedimento;
+    Tipo tipoRetorno = TipoPrimitivo.VOID;
+    Id nome;
+    DefProcedimento defProcedimento;
 }
 {
     (
+        LOOKAHEAD(<PROC> PTipo() PId() <LPAREN> <RPAREN>)
+        <PROC> tipoRetorno = PTipo() nome = PId() <LPAREN> <RPAREN> defProcedimento = PDefProcedimento(tipoRetorno)
+        |
+        LOOKAHEAD(<PROC> PTipo() PId() <LPAREN>)
+        <PROC> tipoRetorno = PTipo() nome = PId() <LPAREN> defProcedimento = PDefProcedimento(tipoRetorno)
+        |
         LOOKAHEAD(<PROC> PId() <LPAREN> <RPAREN>)
-    	<PROC> nome = PId() <LPAREN> <RPAREN> defProcedimento = PDefProcedimento()
-    	|
-    	<PROC> nome = PId() <LPAREN> defProcedimento = PDefProcedimento()
+        <PROC> nome = PId() <LPAREN> <RPAREN> defProcedimento = PDefProcedimento(tipoRetorno)
+        |
+        <PROC> nome = PId() <LPAREN> defProcedimento = PDefProcedimento(tipoRetorno)
     )
-	{
-	    return new DeclaracaoProcedimento (nome, defProcedimento);
-	}
+    {
+        return new DeclaracaoProcedimento(nome, defProcedimento);
+    }
 }
-
-DefProcedimento PDefProcedimento():
+DefProcedimento PDefProcedimento(Tipo tipoRetorno):
 {
 	ListaDeclaracaoParametro listaPar = null;
 	Comando comando;
+	Tipo tipoFinal;
 }
 {
     (
@@ -756,7 +812,7 @@ DefProcedimento PDefProcedimento():
 	    if(listaPar == null) {
 	        listaPar = new ListaDeclaracaoParametro();
 	    }
-	    return new DefProcedimento (listaPar, comando);
+	    return new DefProcedimento (listaPar, comando, tipoRetorno);
 	}
 	
 }
@@ -769,7 +825,9 @@ Tipo PTipo():
 	(
 	<INT> {tipo = TipoPrimitivo.INTEIRO;} |
 	<BOOLEAN> {tipo = TipoPrimitivo.BOOLEANO;} |
-	<STRING> {tipo = TipoPrimitivo.STRING;}
+	<STRING> {tipo = TipoPrimitivo.STRING;} |
+	<VOID> {tipo = TipoPrimitivo.VOID;}
+
 	)
 	{
 		return tipo;

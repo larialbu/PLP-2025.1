@@ -1,5 +1,7 @@
 package li2.plp.imperative1.command;
 
+import li2.plp.expressions1.util.Tipo;
+import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.expressions2.expression.ValorBooleano;
 import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
@@ -58,4 +60,23 @@ public class While implements Comando {
 				&& comando.checaTipo(ambiente);
 	}
 
+	@Override
+	public boolean contemReturn(){
+		return comando.contemReturn();
+	}
+
+	@Override
+	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
+		System.out.println("ENTROU EM WHILE");
+
+		if(comando.contemReturn()){
+			Tipo tipoRetorno = comando.getTipoRetorno(amb);
+
+			if(tipoRetorno != null){
+				return tipoRetorno;
+			}
+			return TipoPrimitivo.VOID;
+		}
+		return TipoPrimitivo.VOID;
+	}
 }
