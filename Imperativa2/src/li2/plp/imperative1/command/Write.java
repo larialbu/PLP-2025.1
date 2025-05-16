@@ -1,6 +1,7 @@
 package li2.plp.imperative1.command;
 
 import li2.plp.expressions1.util.Tipo;
+import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
 import li2.plp.imperative1.memory.AmbienteCompilacaoImperativa;
@@ -54,6 +55,6 @@ public class Write implements IO {
 	@Override
 	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
 		System.out.println("ENTROU EM WRITE");
-		return null;
+		return TipoPrimitivo.VOID;
 	}
 }

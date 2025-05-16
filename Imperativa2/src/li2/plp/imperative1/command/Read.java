@@ -1,6 +1,7 @@
 package li2.plp.imperative1.command;
 
 import li2.plp.expressions1.util.Tipo;
+import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.expression.Valor;
 import li2.plp.expressions2.memory.VariavelJaDeclaradaException;
@@ -71,7 +72,7 @@ public class Read implements IO {
 	@Override
 	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
 		System.out.println("ENTROU EM READ");
-		return null;
+		return TipoPrimitivo.VOID;
 	}
 
 }

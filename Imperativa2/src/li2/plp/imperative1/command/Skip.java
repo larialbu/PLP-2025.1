@@ -1,6 +1,7 @@
 package li2.plp.imperative1.command;
 
 import li2.plp.expressions1.util.Tipo;
+import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
 import li2.plp.imperative1.memory.AmbienteCompilacaoImperativa;
 
@@ -42,6 +43,6 @@ public class Skip implements Comando {
 	@Override
 	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
 		System.out.println("ENTROU EM SKIP");
-		return null;
+		return TipoPrimitivo.VOID;
 	}
 }

@@ -83,14 +83,10 @@ public class ChamadaFuncao implements Expressao {
             System.out.println("ENTROU NO CHECATIPO DE CHAMADAFUNCAO");
             
             AmbienteCompilacaoImperativa aux = (AmbienteCompilacaoImperativa) ambiente;
-            System.out.println("PASSOU 1");
             
-            System.out.println("AQUI O RESTAURA JA FOI CHAMADO E O PROCEDIMENTO NAO TA MAIS NO AMBIENTE");
             DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
-            System.out.println("PASSOU 2");
             
             ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
-            System.out.println("PASSOU 3");
 
             boolean parametrosOk = parametrosReais.checaTipo(ambiente, parametrosFormais);
             boolean retornaValor = !TipoPrimitivo.VOID.eIgual(procedimento.getTipoRetorno(aux));

@@ -1,6 +1,7 @@
 package li2.plp.imperative1.command;
 
 import li2.plp.expressions1.util.Tipo;
+import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.expressions2.expression.ValorBooleano;
 import li2.plp.expressions2.memory.IdentificadorJaDeclaradoException;
@@ -24,6 +25,7 @@ public class IfThenElse implements Comando {
 		this.expressao = expressao;
 		this.comandoThen = comandoThen;
 		this.comandoElse = comandoElse;
+		System.out.println("CONSTRUTOR DE IFTHENELSE");
 	}
 
 	/**
@@ -67,32 +69,42 @@ public class IfThenElse implements Comando {
 
 	@Override
 	public boolean contemReturn(){
-		return comandoThen.contemReturn() && comandoElse.contemReturn();
+		boolean cr = comandoThen.contemReturn() && comandoElse.contemReturn();
+		System.out.println("IFTHENELSE: CONTEMRETURN: " + cr);
+		return cr;
 	}
 
 	@Override
 	public Tipo getTipoRetorno(AmbienteCompilacaoImperativa amb){
-		System.out.println("ENTROU EM IFTHENELSE");
+		System.out.println("ENTROU EM GETTIPORETORNO DE IFTHENELSE");
 		if(this.contemReturn()){
+
+
+
 			Tipo tipoThen = comandoThen.getTipoRetorno(amb);
 			Tipo tipoElse = comandoElse.getTipoRetorno(amb);
 
-			if (tipoThen != null && tipoElse != null) {
+			boolean thenTemReturn = !(tipoThen instanceof TipoPrimitivo) || !((TipoPrimitivo) tipoThen).equals(TipoPrimitivo.VOID);
+			boolean elseTemReturn = !(tipoElse instanceof TipoPrimitivo) || !((TipoPrimitivo) tipoElse).equals(TipoPrimitivo.VOID);
+
+			if (thenTemReturn && elseTemReturn) {
 				if (tipoThen.eIgual(tipoElse)) {
+					System.out.println("Todos os tipos de retorno compativeis");
 					return tipoThen;
 				} else {
 					throw new TiposRetornoIncompativeisException(
 						"Tipos de retorno diferentes: " + tipoThen + " e " + tipoElse
 					);
 				}
-			} else if (tipoThen != null ^ tipoElse != null) {
+			} else if (thenTemReturn ^ elseTemReturn) {
 				throw new TiposRetornoIncompativeisException(
 					"Apenas um dos ramos do if contém comando de retorno"
 				);
 			} else {
-				return null;  // Se nenhum dos ramos retornar um tipo
+				System.out.println("Todos retornam void");
+				return TipoPrimitivo.VOID;  // Se nenhum dos ramos retornar um tipo
 			}
 		}
-		return null;  // Se não houver nenhum `return` nos ramos
+		return TipoPrimitivo.VOID;  // Se não houver nenhum `return` nos ramos
 		}
 }
