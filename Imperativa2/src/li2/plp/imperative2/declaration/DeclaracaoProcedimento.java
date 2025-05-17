@@ -40,24 +40,27 @@ public class DeclaracaoProcedimento extends Declaracao {
 		return this.id;
 	}
 
+	public void mapa(AmbienteCompilacaoImperativa ambiente)
+			throws IdentificadorJaDeclaradoException {
+		System.out.println("ENTROU NO MAPA DE DECLARACAOPROCEDIMENTO");
+		ambiente.map(id, defProcedimento.getTipo());
+		ambiente.mapProcedimento(id, defProcedimento);
+		System.out.println("PROCEDIMENTO " + id + " MAPEADO");
+	}
+
 	@Override
 	public boolean checaTipo(AmbienteCompilacaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException,
-			IdentificadorNaoDeclaradoException, EntradaVaziaException {
+				IdentificadorNaoDeclaradoException, EntradaVaziaException {
 
 		boolean resposta;
-		System.out.println("ENTROU NO CHECATIPO DE DECLARACAOPROCEDIMENTO para: " + id + " " + defProcedimento.getTipo());
 
-		ambiente.map(id, defProcedimento.getTipo());
-		ambiente.mapProcedimento(id, defProcedimento);
-
+		System.out.println("ENTROU NO CHECATIPO DE DECLARACAOPROCEDIMENTO: " + id);
 
 		DefProcedimento procedimento = getDefProcedimento();
 		ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
 
 		if (parametrosFormais.checaTipo(ambiente)) {
-			System.out.println("PRIMEIRO IF DE CHECATIPO");
-
 			ambiente.incrementa();
 			ambiente = parametrosFormais.elabora(ambiente);
 
@@ -65,54 +68,29 @@ public class DeclaracaoProcedimento extends Declaracao {
 			resposta = comando.checaTipo(ambiente);
 
 			if (comando.contemReturn()) {
-				System.out.println("SEGUNDO IF DE CHECATIPO");
 				Tipo tipoRetornado = comando.getTipoRetorno(ambiente);
+				Tipo tipoDeclarado = procedimento.getTipoRetorno(ambiente);
 
-				// Verificação específica para tipos função
 				if (tipoRetornado instanceof TipoSubAlgoritmo) {
-					TipoSubAlgoritmo tipoRetornadoFunc = (TipoSubAlgoritmo) tipoRetornado;
-					Tipo tipoDeclarado = procedimento.getTipoRetorno(ambiente);
-
-					if (tipoDeclarado instanceof TipoSubAlgoritmo) {
-						TipoSubAlgoritmo tipoDeclaradoFunc = (TipoSubAlgoritmo) tipoDeclarado;
-
-						if (!tipoRetornadoFunc.eIgual(tipoDeclaradoFunc)) {
-							System.out.println("TIPO FUNÇÃO NÃO COMPATÍVEL");
-							resposta = false;
-						}
-					} else {
-						System.out.println("ERRO: Tipo declarado não é função.");
+					if (!(tipoDeclarado instanceof TipoSubAlgoritmo) ||
+						!tipoRetornado.eIgual(tipoDeclarado)) {
 						resposta = false;
 					}
 				} else if (!TipoPrimitivo.VOID.eIgual(tipoRetornado)) {
-					System.out.println("TERCEIRO IF DE CHECATIPO");
-					Tipo tipoDeclarado = procedimento.getTipoRetorno(ambiente);
-					System.out.println("Declarado: " + tipoDeclarado + ". Retornado: " + tipoRetornado);
 					if (!tipoDeclarado.eIgual(tipoRetornado)) {
-						System.out.println("QUARTO IF DE CHECATIPO");
 						resposta = false;
 					}
-				} else {
-					System.out.println("RETURN VOID MAS NAO DEVIA RETORNAR NADA");
-					// Return do tipo VOID mas não devia retornar nada
-					if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipoRetorno(ambiente))) {
-						System.out.println("QUINTO IF DE CHECATIPO");
-						resposta = false;
-					}
+				} else if (!TipoPrimitivo.VOID.eIgual(tipoDeclarado)) {
+					resposta = false;
 				}
 			} else {
-				System.out.println("SEGUNDO ELSE DE CHECATIPO");
-				// Se não tem return, o tipo declarado precisa ser VOID
-				Tipo tipoDeclarado = procedimento.getTipoRetorno(ambiente);
-				System.out.println("Declarado: " + tipoDeclarado);
-				if (!TipoPrimitivo.VOID.eIgual(tipoDeclarado)) {
-					System.out.println("SEXTO IF DE CHECATIPO");
+				// Nenhum return: o tipo declarado deve ser void
+				if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipoRetorno(ambiente))) {
 					resposta = false;
 				}
 			}
 
 			ambiente.restaura();
-			
 		} else {
 			resposta = false;
 		}
@@ -121,7 +99,7 @@ public class DeclaracaoProcedimento extends Declaracao {
 	}
 
 	private DefProcedimento getDefProcedimento() {
-		System.out.println("ENTROU NO GETDEFPROCEDIMENTO DE DECLARACAOPROCEDIMENTO");
+		System.out.println("GETDEFPROCEDIMENTO DE DECLARACAOPROCEDIMENTO");
 		return this.defProcedimento;
 	}
 }

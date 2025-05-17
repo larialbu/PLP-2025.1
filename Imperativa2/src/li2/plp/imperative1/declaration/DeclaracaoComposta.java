@@ -26,10 +26,21 @@ public class DeclaracaoComposta extends Declaracao {
 	}
 
 	@Override
+	public void mapa(AmbienteCompilacaoImperativa ambiente)
+			throws IdentificadorJaDeclaradoException {
+
+		declaracao1.mapa(ambiente);
+		declaracao2.mapa(ambiente);
+	}
+
+	@Override
 	public boolean checaTipo(AmbienteCompilacaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException,
 			IdentificadorNaoDeclaradoException, EntradaVaziaException {
-		return declaracao1.checaTipo(ambiente)
-				&& declaracao2.checaTipo(ambiente);
+		
+		boolean tipo1 = declaracao1.checaTipo(ambiente);
+		boolean tipo2 = declaracao2.checaTipo(ambiente);
+		
+		return tipo1 && tipo2;
 	}
 }

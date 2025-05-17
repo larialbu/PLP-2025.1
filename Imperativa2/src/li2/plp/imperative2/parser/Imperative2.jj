@@ -822,18 +822,13 @@ DefProcedimento PDefProcedimento(Tipo tipoRetorno):
 Tipo PTipo():
 {
 	Tipo tipo;
-	Tipo retorno;
-	ListaTipos parametros;
 }
 {
 	(
 	<INT> {tipo = TipoPrimitivo.INTEIRO;} |
 	<BOOLEAN> {tipo = TipoPrimitivo.BOOLEANO;} |
 	<STRING> {tipo = TipoPrimitivo.STRING;} |
-	<VOID> {tipo = TipoPrimitivo.VOID;} |
-	<FUNC> <LPAREN> parametros = PListaTipos() <RPAREN>
-		<ARROW> retorno = PTipo() {tipo = new TipoSubAlgoritmo(parametros, retorno);}
-
+	<VOID> {tipo = TipoPrimitivo.VOID;}
 	)
 	{
 		return tipo;
@@ -857,18 +852,29 @@ ListaDeclaracaoParametro PListaDeclaracaoParametro():
 {
 	Id id;
 	Tipo tipo;
+	ListaTipos parametros;
+	Tipo retorno;
 	ListaDeclaracaoParametro lista = null;
 }
 {
-	[ tipo = PTipo() 
-	  id = PId() 
+	[ 
+	  (
+	    <FUNC> id = PId() <LPAREN> parametros = PListaTipos() <RPAREN> <ARROW> retorno = PTipo() 
+	    {tipo = new TipoSubAlgoritmo(parametros, retorno);} 
+	  |
+	    tipo = PTipo() id = PId()
+	  ) 
 	  { lista = new ListaDeclaracaoParametro(new DeclaracaoParametro(id, tipo));}
 	] 
 	( <COMMA> 
-	  tipo = PTipo() id = PId() 
+	  (
+	    <FUNC> id = PId() <LPAREN> parametros = PListaTipos() <RPAREN> <ARROW> retorno = PTipo() 
+	    {tipo = new TipoSubAlgoritmo(parametros, retorno);} 
+	  |
+	    tipo = PTipo() id = PId() 
+	  ) 
 	  {lista = new ListaDeclaracaoParametro(new DeclaracaoParametro(id, tipo), lista);} 
 	)*
-	
 	{
 		if (lista == null) {
 			lista = new ListaDeclaracaoParametro();

@@ -51,23 +51,32 @@ public class ComandoDeclaracao implements Comando {
 	 * Verifica se o tipo do comando esta correto, levando em conta que o tipo
 	 * de uma variavel � o tipo do valor da sua primeira atribuicao.
 	 */
+	@Override
 	public boolean checaTipo(AmbienteCompilacaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException,
-			IdentificadorNaoDeclaradoException, EntradaVaziaException {
-		boolean resposta;
+				IdentificadorNaoDeclaradoException, EntradaVaziaException {
+
 		System.out.println("ENTROU NO CHECATIPO DE COMANDODECLARACAO");
+
 		ambiente.incrementa();
 
+		// 1. Mapeia a declaração antes de verificar tipos
+		declaracao.mapa(ambiente);
+
+		// 2. Checa tipos da declaração e do comando
 		boolean decct = declaracao.checaTipo(ambiente);
 		System.out.println("COMANDODECLARACAO (DEC): " + declaracao + ": " + decct);
+
 		boolean comct = comando.checaTipo(ambiente);
 		System.out.println("COMANDODECLARACAO (COM): " + comando + ": " + comct);
-		resposta = decct && comct;
 
-		ambiente.restaura();		
+		ambiente.restaura();
+
+		boolean resposta = decct && comct;
 		System.out.println("SAIU DO CHECATIPO DO COMANDODECLARACAO: " + resposta);
 		return resposta;
 	}
+
 
 	@Override
 	public boolean contemReturn(){

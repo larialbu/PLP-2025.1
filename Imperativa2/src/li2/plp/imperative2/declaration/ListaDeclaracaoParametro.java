@@ -71,6 +71,7 @@ public class ListaDeclaracaoParametro extends Lista<DeclaracaoParametro> {
 	}
 
 	public List<Tipo> getTipos() {
+		System.out.println("ENTROU EM GETTIPOS DE LISTADECLARACAOPARAMETRO");
 		ArrayList<Tipo> retorno = new ArrayList<Tipo>();
 
 		DeclaracaoParametro headTemp = this.head;
@@ -88,6 +89,7 @@ public class ListaDeclaracaoParametro extends Lista<DeclaracaoParametro> {
 			}
 		}
 
+		System.out.println("SAIU DE GETTIPOS DE LISTADECLARACAOPARAMETRO");
 		return retorno;
 	}
 
