@@ -65,7 +65,7 @@ public class DeclaracaoVariavel extends Declaracao {
 			IdentificadorNaoDeclaradoException {
 		System.out.println("ENTROU NO CHECATIPO DE DECLARACAOVARIAVEL");
 		boolean result = getExpressao().checaTipo(ambiente);
-		System.out.println("SAIU DO CHECATIPO DE DECLARACAOVARIAVEL");
+		System.out.println("SAIU DO CHECATIPO DE DECLARACAOVARIAVEL: " + result);
 		return result;
 	}
 

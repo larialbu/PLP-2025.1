@@ -103,10 +103,9 @@ public class ChamadaProcedimento implements Comando {
 
 		Tipo tipoProcedimento = amb.get(this.nomeProcedimento);
 		System.out.println("ENTROU NO CHECATIPO DE CHAMADAPROCEDIMENTO");
-
-		TipoProcedimento tipoParametrosReais = new TipoProcedimento(
-				parametrosReais.getTipos(amb));
-		System.out.println("SAIU DO CHECATIPO DE CHAMADAPROCEDIMENTO");	
+		List<Tipo> parametros = parametrosReais.getTipos(amb);
+		TipoProcedimento tipoParametrosReais = new TipoProcedimento(parametros);
+		System.out.println("SAIU DO CHECATIPO DE CHAMADAPROCEDIMENTO: " + parametros);	
 		return tipoProcedimento.eIgual(tipoParametrosReais);
 	}
 

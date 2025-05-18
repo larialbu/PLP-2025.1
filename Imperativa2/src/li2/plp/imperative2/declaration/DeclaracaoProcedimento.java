@@ -43,9 +43,29 @@ public class DeclaracaoProcedimento extends Declaracao {
 	public void mapa(AmbienteCompilacaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException {
 		System.out.println("ENTROU NO MAPA DE DECLARACAOPROCEDIMENTO");
-		ambiente.map(id, defProcedimento.getTipo());
+
+		Tipo tipo = defProcedimento.getTipo();
 		ambiente.mapProcedimento(id, defProcedimento);
-		System.out.println("PROCEDIMENTO " + id + " MAPEADO");
+		System.out.println("PROCEDIMENTO " + id + " MAPPROCEDIMENTO");
+
+		if(defProcedimento.retornaValor()){
+			ListaTipos listaTipos = new ListaTipos();
+			ListaDeclaracaoParametro lista = defProcedimento.getParametrosFormais();
+
+			while (lista != null && lista.getHead() != null){
+				listaTipos.adicionar(lista.getHead().getTipo());
+				lista = (ListaDeclaracaoParametro) lista.getTail();
+			}
+
+			TipoSubAlgoritmo tipoFunc = new TipoSubAlgoritmo(listaTipos, defProcedimento.getTipoRetorno(ambiente));
+			ambiente.map(id, tipoFunc);
+			System.out.println("FUNCAO " + id + " MAPEADA COMO: " + tipoFunc);
+		} else {
+			ambiente.map(id, tipo);
+			System.out.println("PROCEDIMENTO: " + id + " MAPEADO COMO: " + tipo);
+		}
+
+		System.out.println("SAIU DO MAPA DE DECLARACAOPROCEDIMENTO");
 	}
 
 	@Override
@@ -61,6 +81,7 @@ public class DeclaracaoProcedimento extends Declaracao {
 		ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
 
 		if (parametrosFormais.checaTipo(ambiente)) {
+			System.out.println("IF: PARAMETROS BEM TIPADOS");
 			ambiente.incrementa();
 			ambiente = parametrosFormais.elabora(ambiente);
 
@@ -68,33 +89,41 @@ public class DeclaracaoProcedimento extends Declaracao {
 			resposta = comando.checaTipo(ambiente);
 
 			if (comando.contemReturn()) {
+				System.out.println("IF: COMANDO CONTEM RETURN");
 				Tipo tipoRetornado = comando.getTipoRetorno(ambiente);
 				Tipo tipoDeclarado = procedimento.getTipoRetorno(ambiente);
 
 				if (tipoRetornado instanceof TipoSubAlgoritmo) {
+					System.out.println("IF: TIPORETORNADO EH FUNCAO");
 					if (!(tipoDeclarado instanceof TipoSubAlgoritmo) ||
-						!tipoRetornado.eIgual(tipoDeclarado)) {
+							!tipoRetornado.eIgual(tipoDeclarado)) {
+						System.out.println("IF: TIPODECLARADO NAO EH FUNCAO OU TIPOS NAO IGUAIS");
 						resposta = false;
 					}
 				} else if (!TipoPrimitivo.VOID.eIgual(tipoRetornado)) {
+					System.out.println("IF: TIPORETORNADO NAO EH VOID");
 					if (!tipoDeclarado.eIgual(tipoRetornado)) {
+						System.out.println("IF: TIPORETORNADO DIFERENTE DE TIPODECLARADO");
 						resposta = false;
 					}
 				} else if (!TipoPrimitivo.VOID.eIgual(tipoDeclarado)) {
+					System.out.println("IF: TIPO RETORNADO EH VOID E DECLARADO NAO");
 					resposta = false;
 				}
 			} else {
-				// Nenhum return: o tipo declarado deve ser void
+				System.out.println("IF: COMANDO NAO CONTEM RETURN");
 				if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipoRetorno(ambiente))) {
+					System.out.println("IF: TIPODECLARADO NAO EH VOID");
 					resposta = false;
 				}
 			}
 
 			ambiente.restaura();
 		} else {
+			System.out.println("IF: PARAMETROS MAL TIPADOS");
 			resposta = false;
 		}
-		System.out.println("SAIU DO CHECATIPO DE DECLARACAOPROCEDIMENTO");
+		System.out.println("SAIU DO CHECATIPO DE DECLARACAOPROCEDIMENTO: " + resposta);
 		return resposta;
 	}
 

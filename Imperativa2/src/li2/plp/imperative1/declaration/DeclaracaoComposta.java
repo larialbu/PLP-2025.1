@@ -38,8 +38,12 @@ public class DeclaracaoComposta extends Declaracao {
 			throws IdentificadorJaDeclaradoException,
 			IdentificadorNaoDeclaradoException, EntradaVaziaException {
 		
+		System.out.println("ENTROU NO CHECATIPO DE DECLARACAOCOMPOSTA");
+
 		boolean tipo1 = declaracao1.checaTipo(ambiente);
 		boolean tipo2 = declaracao2.checaTipo(ambiente);
+
+		System.out.println("SAIU DO CHECATIPO DE DECLARACAOCOMPOSTA: " + tipo1 + " e " + tipo2);
 		
 		return tipo1 && tipo2;
 	}

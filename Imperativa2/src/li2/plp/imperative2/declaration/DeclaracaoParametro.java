@@ -1,6 +1,7 @@
 package li2.plp.imperative2.declaration;
 
 import li2.plp.expressions1.util.Tipo;
+import li2.plp.imperative2.declaration.TipoSubAlgoritmo;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.memory.VariavelJaDeclaradaException;
 import li2.plp.expressions2.memory.VariavelNaoDeclaradaException;
@@ -42,7 +43,15 @@ public class DeclaracaoParametro {
 	public AmbienteCompilacaoImperativa elabora(
 			AmbienteCompilacaoImperativa ambiente)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		ambiente.map(id, tipo);
+		
+		if(tipo instanceof TipoSubAlgoritmo){
+			System.out.println("PARAMETRO FUNCAO: " + id + " COM TIPO: " + tipo);
+			ambiente.mapFuncao(id,(TipoSubAlgoritmo) tipo);
+		} else {
+			System.out.println("PARAMETRO VARIAVEL: " + id + " COM TIPO: " + tipo);
+			ambiente.map(id,tipo);
+		}
+
 		return ambiente;
 	}
 

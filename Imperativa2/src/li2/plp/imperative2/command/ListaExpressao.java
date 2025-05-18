@@ -47,16 +47,11 @@ public class ListaExpressao extends Lista<Expressao> {
 		List<Tipo> result = new LinkedList<Tipo>();
 		System.out.println("ENTROU NO GETTIPOS DE LISTAEXPRESSAO");
 		if (this.length() >= 2) {
-			System.out.println(result);
-			result.add(getHead().getTipo(ambiente));
-			System.out.println(result);
 			result.addAll(((ListaExpressao) getTail()).getTipos(ambiente));
-			System.out.println(result);
+			result.add(getHead().getTipo(ambiente));
 		} else if (length() == 1) {
-			System.out.println(result + "else");
 			result.add(getHead().getTipo(ambiente));
 		}
-		System.out.println(result + "return");
 		System.out.println("SAIU DO GETTIPOS DE LISTAEXPRESSAO");
 		return result;
 	}
@@ -76,13 +71,16 @@ public class ListaExpressao extends Lista<Expressao> {
 			Tipo tipoReal = tiposReais.get(i);
 			Tipo tipoFormal = params.getHead().getTipo();
 
+			System.out.println("COMPARANDO TIPO REAL: " + tipoReal + " COM TIPO FORMAL: " + tipoFormal);
+
 			if(!tipoReal.eIgual(tipoFormal)){
+				System.out.println("SAIU DO CHECATIPO DE LISTAEXPRESSAO");
 				return false;
 			}
 			
 			params = (ListaDeclaracaoParametro) params.getTail();
 		}
-
+		System.out.println("SAIU DO CHECATIPO DE LISTAEXPRESSAO");
 		return true;
 	}
 }
