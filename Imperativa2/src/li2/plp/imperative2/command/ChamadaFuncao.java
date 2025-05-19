@@ -18,6 +18,7 @@ import li2.plp.imperative2.declaration.ListaDeclaracaoParametro;
 import li2.plp.imperative2.declaration.ListaTipos;
 import li2.plp.expressions2.memory.IdentificadorNaoDeclaradoException;
 import li2.plp.expressions2.memory.VariavelNaoDeclaradaException;
+import li2.plp.imperative2.util.TipoProcedimento;
 
 import li2.plp.imperative2.command.ReturnException;
 import li2.plp.expressions2.expression.ValorVoid;
@@ -139,12 +140,34 @@ public class ChamadaFuncao implements Expressao {
     public Tipo getTipo(AmbienteCompilacao ambiente) {
         try {
             System.out.println("ENTROU NO GETTIPPO DE CHAMADAFUNCAO");
+
             AmbienteCompilacaoImperativa aux = (AmbienteCompilacaoImperativa) ambiente;
-            DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
-            System.out.println("SAIU DO GETTIPO DE CHAMADAFUNCAO");
-            return procedimento.getTipoRetorno(aux);
+
+            Tipo tipo;
+
+            // Tenta obter como variável (caso seja função passada como parâmetro)
+            try {
+                tipo = aux.getFuncao(nomeProcedimento);  // Corrigido para passar o nome como String
+                System.out.println("FUNCAO " + nomeProcedimento + " ENCONTRADA COMO VARIAVEL: " + tipo);
+            } catch (IdentificadorNaoDeclaradoException e) {
+                // Se não for uma variável, tenta obter como procedimento global
+                DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);  // Corrigido para passar o nome como String
+                tipo = procedimento.getTipoRetorno(aux);
+                System.out.println("FUNCAO " + nomeProcedimento + " ENCONTRADA COMO PROCEDIMENTO: " + tipo);
+            }
+
+            // Verifica se o tipo retornado é válido para função
+            if (tipo instanceof TipoSubAlgoritmo) {
+                TipoSubAlgoritmo ts = (TipoSubAlgoritmo) tipo;
+                return ts.getTipoRetorno();
+            } else {
+                // Caso contrário, retorna o tipo diretamente (para procedimentos)
+                return tipo;
+            }
+
         } catch (Exception e) {
-            return null;
+            System.err.println("ERRO EM GETTIPO DE CHAMADAFUNCAO: " + e.getMessage());
+            throw new IdentificadorNaoDeclaradoException(nomeProcedimento.toString());
         }
     }
 

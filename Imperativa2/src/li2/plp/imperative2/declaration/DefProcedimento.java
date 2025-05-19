@@ -85,7 +85,7 @@ public class DefProcedimento {
 			System.out.println("SAINDO DE GETTIPO DE DEFPROCEDIMENTO FUNC: " + tipoFunc);
 			return tipoFunc;
 		} else {
-			TipoProcedimento tipoProc = new TipoProcedimento(listaTipos);
+			TipoProcedimento tipoProc = new TipoProcedimento(listaTipos, TipoPrimitivo.VOID);
 			System.out.println("SAINDO DE GETTIPO DE DEFPROCEDIMENTO PROC: " + tipoProc);
 			return tipoProc;
 		}

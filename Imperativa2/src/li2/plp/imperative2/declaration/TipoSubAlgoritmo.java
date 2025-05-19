@@ -1,5 +1,6 @@
 package li2.plp.imperative2.declaration;
 
+import li2.plp.imperative2.util.TipoProcedimento;
 import li2.plp.expressions1.util.Tipo;
 import li2.plp.imperative2.declaration.ListaTipos;
 
@@ -20,12 +21,18 @@ public class TipoSubAlgoritmo implements Tipo {
         return retorno;
     }
     
+
     @Override
-    public boolean eIgual(Tipo outro) {
-        if (outro instanceof TipoSubAlgoritmo) {
-            TipoSubAlgoritmo outroFunc = (TipoSubAlgoritmo) outro;
-            return parametros.eIgual(outroFunc.getParametros()) &&
-                   retorno.eIgual(outroFunc.getRetorno());
+    public boolean eIgual(Tipo tipo) {
+        if (tipo instanceof TipoProcedimento) {
+            TipoProcedimento outro = (TipoProcedimento) tipo;
+            return this.parametros.equals(outro.getListaParametros()) &&
+                this.retorno.equals(outro.getTipoRetorno());
+        }
+        if (tipo instanceof TipoSubAlgoritmo) {
+            TipoSubAlgoritmo outro = (TipoSubAlgoritmo) tipo;
+            return this.parametros.equals(outro.parametros) &&
+                this.retorno.equals(outro.retorno);
         }
         return false;
     }
@@ -70,5 +77,9 @@ public class TipoSubAlgoritmo implements Tipo {
     @Override
     public String toString() {
         return getNome();
+    }
+
+    public Tipo getTipoRetorno(){
+        return retorno;
     }
 }

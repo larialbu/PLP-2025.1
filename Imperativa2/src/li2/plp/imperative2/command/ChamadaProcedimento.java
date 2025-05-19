@@ -2,6 +2,8 @@ package li2.plp.imperative2.command;
 
 import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions1.util.TipoPrimitivo;
+import li2.plp.imperative2.util.TipoProcedimento;
+import li2.plp.imperative2.declaration.TipoSubAlgoritmo;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.memory.IdentificadorJaDeclaradoException;
 import li2.plp.expressions2.memory.IdentificadorNaoDeclaradoException;
@@ -17,6 +19,7 @@ import li2.plp.imperative2.declaration.DefProcedimento;
 import li2.plp.imperative2.declaration.ListaDeclaracaoParametro;
 import li2.plp.imperative2.memory.AmbienteExecucaoImperativa2;
 import li2.plp.imperative2.util.TipoProcedimento;
+import li2.plp.expressions2.expression.Expressao;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -51,6 +54,7 @@ public class ChamadaProcedimento implements Comando {
 		ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
 		AmbienteExecucaoImperativa2 aux = bindParameters(ambiente, parametrosFormais);
 		System.out.println("ENTROU NO EXECUTAR DE CHAMADAPROCEDIMENTO");
+
 		for (int i = decorators.size()-1; i >= 0; i--){
 			Id decoratorId = decorators.get(i);
 			DefProcedimento decoratorProc = aux.getProcedimento(decoratorId);
@@ -58,6 +62,7 @@ public class ChamadaProcedimento implements Comando {
 			aux = (AmbienteExecucaoImperativa2) decoratorProc.getComando().executar(aux);
 			aux.restaura();
 		}
+
 		aux = (AmbienteExecucaoImperativa2) procedimento.getComando().executar(aux);
 		System.out.println("SAIU DO EXECUTAR DE CHAMADAPROCEDIMENTO");
 		aux.restaura();
@@ -98,15 +103,33 @@ public class ChamadaProcedimento implements Comando {
 	 *         <code>false</code> caso contrario.
 	 */
 	public boolean checaTipo(AmbienteCompilacaoImperativa amb)
-			throws IdentificadorJaDeclaradoException,
-			IdentificadorNaoDeclaradoException {
+			throws IdentificadorJaDeclaradoException, IdentificadorNaoDeclaradoException {
+		
+		System.out.println("ENTROU NO CHECATIPO DE CHAMADAPROCEDIMENTO: " + this.nomeProcedimento);
 
-		Tipo tipoProcedimento = amb.get(this.nomeProcedimento);
-		System.out.println("ENTROU NO CHECATIPO DE CHAMADAPROCEDIMENTO");
-		List<Tipo> parametros = parametrosReais.getTipos(amb);
-		TipoProcedimento tipoParametrosReais = new TipoProcedimento(parametros);
-		System.out.println("SAIU DO CHECATIPO DE CHAMADAPROCEDIMENTO: " + parametros);	
-		return tipoProcedimento.eIgual(tipoParametrosReais);
+		Tipo tipoDeclarado = amb.get(this.nomeProcedimento);
+		System.out.println("TIPO DECLARADO: " + tipoDeclarado.getClass());
+
+		List<Tipo> parametrosReaisTipos = parametrosReais.getTipos(amb);
+
+		TipoProcedimento tipoEsperado;
+
+		if (tipoDeclarado instanceof TipoSubAlgoritmo) {
+			TipoSubAlgoritmo tipoSub = (TipoSubAlgoritmo) tipoDeclarado;
+			tipoEsperado = new TipoProcedimento(tipoSub.getParametros().getTipos(), tipoSub.getTipoRetorno());
+		} else if (tipoDeclarado instanceof TipoProcedimento) {
+			tipoEsperado = (TipoProcedimento) tipoDeclarado;
+		} else {
+			System.out.println("TIPO NAO É PROCEDIMENTO OU FUNÇÃO");
+			return false;
+		}
+
+		TipoProcedimento tipoInformado = new TipoProcedimento(parametrosReaisTipos, tipoEsperado.getTipoRetorno());
+
+		System.out.println("TIPO ESPERADO: " + tipoEsperado);
+		System.out.println("TIPO INFORMADO: " + tipoInformado);
+
+		return tipoEsperado.eIgual(tipoInformado);
 	}
 
 	public List<Id> getDecorators(){
