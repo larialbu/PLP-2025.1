@@ -45,4 +45,23 @@ public class ListaValor extends Lista<Valor>{
         }
     }
 	
+    /**
+     * Retorna uma nova ListaValor com o valor na frente da lista existente.
+     */
+    public static ListaValor comCabeca(Valor cabeca, ListaValor cauda) {
+        return new ListaValor(cabeca, cauda);
+    }
+
+    public ListaValor writeRetornandoNovo(Valor valor) {
+        ListaValor novaLista = new ListaValor();
+        Lista<Valor> atual = this;
+        
+        while (atual.getHead() != null) {
+            novaLista.write(atual.getHead());
+            atual = atual.getTail();
+        }
+        
+        novaLista.write(valor);
+        return novaLista;
+    }
 }

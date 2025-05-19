@@ -7,6 +7,7 @@ import li2.plp.imperative2.declaration.TipoSubAlgoritmo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.expression.Valor;
+import li2.plp.imperative2.memory.ValorFuncao;
 import li2.plp.expressions2.memory.AmbienteExecucao;
 import li2.plp.expressions2.memory.AmbienteCompilacao;
 import li2.plp.imperative1.memory.ListaValor;
@@ -17,7 +18,11 @@ import li2.plp.imperative2.declaration.DeclaracaoParametro;
 import li2.plp.imperative2.declaration.ListaDeclaracaoParametro;
 import li2.plp.imperative2.declaration.ListaTipos;
 import li2.plp.expressions2.memory.IdentificadorNaoDeclaradoException;
+import li2.plp.expressions2.memory.IdentificadorJaDeclaradoException;
 import li2.plp.expressions2.memory.VariavelNaoDeclaradaException;
+import li2.plp.expressions2.memory.VariavelJaDeclaradaException;
+import li2.plp.imperative1.memory.EntradaVaziaException;
+import li2.plp.imperative1.memory.ErroTipoEntradaException;
 import li2.plp.imperative2.util.TipoProcedimento;
 
 import li2.plp.imperative2.command.ReturnException;
@@ -37,29 +42,35 @@ public class ChamadaFuncao implements Expressao {
     @Override
     public Valor avaliar(AmbienteExecucao ambiente) {
         System.out.println("ENTROU NO AVALIAR DE CHAMADAFUNCAO");
+
         try {
             AmbienteExecucaoImperativa2 aux = (AmbienteExecucaoImperativa2) ambiente;
-            DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
-            if(!procedimento.retornaValor()){
+
+            DefProcedimento procedimento;
+
+            try {
+                // Primeiro, tenta obter como variável local
+                Valor possivelFuncao = aux.get(nomeProcedimento);
+
+                if (!(possivelFuncao instanceof ValorFuncao)) {
+                    throw new RuntimeException("Identificador '" + nomeProcedimento + "' não é uma função.");
+                }
+
+                procedimento = ((ValorFuncao) possivelFuncao).getValor();
+                System.out.println("FUNÇÃO '" + nomeProcedimento + "' ENCONTRADA COMO VARIÁVEL (ARGUMENTO)");
+            } catch (IdentificadorNaoDeclaradoException e) {
+                // Se não existir como variável, tenta como procedimento global
+                procedimento = aux.getProcedimento(nomeProcedimento);
+                System.out.println("FUNÇÃO '" + nomeProcedimento + "' ENCONTRADA COMO PROCEDIMENTO GLOBAL");
+            }
+
+            if (!procedimento.retornaValor()) {
                 throw new RuntimeException("Procedimento '" + nomeProcedimento + "' não retorna valor.");
             }
 
-            aux.incrementa();
-            ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
-            aux = bindParameters(aux, parametrosFormais);
-
-            Valor retorno;
-            try {
-                aux = (AmbienteExecucaoImperativa2) procedimento.getComando().executar(aux);
-                retorno = new ValorVoid();  // Caso não tenha return explícito
-            } catch (ReturnException e) {
-                retorno = e.getValor();
-            } finally {
-                aux.restaura();
-            }
-
-            System.out.println("SAIU DO AVALIAR DE CHAMADAFUNCAO");
-            return retorno;
+            // Avalia os parâmetros apenas uma vez
+            ListaValor valoresReais = parametrosReais.avaliar(aux);
+            return avaliarComValores(aux, procedimento, valoresReais);
 
         } catch (Exception e) {
             System.out.println("SAIU (EXCEPTION) DO AVALIAR DE CHAMADAFUNCAO");
@@ -67,6 +78,27 @@ public class ChamadaFuncao implements Expressao {
         }
     }
 
+    public Valor avaliarComValores(AmbienteExecucaoImperativa2 ambiente, DefProcedimento procedimento, ListaValor valoresReais) 
+        throws IdentificadorNaoDeclaradoException, IdentificadorJaDeclaradoException, EntradaVaziaException, ErroTipoEntradaException{
+
+        ambiente.incrementa();
+
+        ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
+        ambiente = bindParameters(ambiente, parametrosFormais, valoresReais);
+
+        Valor retorno;
+        try {
+            ambiente = (AmbienteExecucaoImperativa2) procedimento.getComando().executar(ambiente);
+            retorno = null; // Valor default se não tiver return
+        } catch (ReturnException e) {
+            retorno = e.getValor();
+        } finally {
+            ambiente.restaura();
+        }
+
+        System.out.println("SAIU DO AVALIAR DE CHAMADAFUNCAO");
+        return retorno;
+    }
 
     private AmbienteExecucaoImperativa2 bindParameters(
             AmbienteExecucaoImperativa2 ambiente,
@@ -81,6 +113,21 @@ public class ChamadaFuncao implements Expressao {
         System.out.println("SAIU DO BINDPARAMETERS DE CHAMADAFUNCAO");
         return ambiente;
     }
+
+	private AmbienteExecucaoImperativa2 bindParameters(
+			AmbienteExecucaoImperativa2 ambiente,
+			ListaDeclaracaoParametro parametrosFormais,
+			ListaValor listaValor) throws VariavelJaDeclaradaException {
+		System.out.println("ENTROU NO BINDPARAMETERS PERSONALIZADO");
+		while (listaValor.length() > 0) {
+			System.out.println("ID: " + parametrosFormais.getHead().getId() + " VALOR: " + listaValor.getHead());
+			ambiente.map(parametrosFormais.getHead().getId(), listaValor.getHead());
+			parametrosFormais = (ListaDeclaracaoParametro) parametrosFormais.getTail();
+			listaValor = (ListaValor) listaValor.getTail();
+		}
+		System.out.println("SAIU DO BINDPARAMETERS PERSONALIZADO");
+		return ambiente;
+	}
 
     @Override
     public boolean checaTipo(AmbienteCompilacao ambiente) {

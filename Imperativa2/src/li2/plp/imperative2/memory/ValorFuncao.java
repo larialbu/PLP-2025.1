@@ -57,4 +57,8 @@ public class ValorFuncao extends ValorConcreto<DefProcedimento> {
         // Retorna o tipo da função utilizando o ambiente
         return funcao.getTipo();
     }
+
+    public DefProcedimento getValor() {
+        return this.funcao;
+    }
 }

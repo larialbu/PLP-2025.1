@@ -43,55 +43,54 @@ public class ChamadaProcedimento implements Comando {
 
 	public AmbienteExecucaoImperativa executar(AmbienteExecucaoImperativa amb)
 			throws IdentificadorNaoDeclaradoException,
-			IdentificadorJaDeclaradoException, EntradaVaziaException, ErroTipoEntradaException {
+			IdentificadorJaDeclaradoException, EntradaVaziaException, 
+			ErroTipoEntradaException {
 
 		AmbienteExecucaoImperativa2 ambiente = (AmbienteExecucaoImperativa2) amb;
 		DefProcedimento procedimento = ambiente.getProcedimento(nomeProcedimento);
 		System.out.println("ENTROU NO EXECUTAR DE CHAMADAPROCEDIMENTO");
 
-		// Incrementa o ambiente para preparar a execução do procedimento
+		// Avalia os parâmetros reais uma vez
+		ListaValor valoresReais = parametrosReais.avaliar(ambiente);
+
+		// Incrementa o ambiente e faz o bind dos parâmetros para a chamada normal
 		ambiente.incrementa();
 		ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
-		AmbienteExecucaoImperativa2 aux = bindParameters(ambiente, parametrosFormais);
+		AmbienteExecucaoImperativa2 aux = bindParameters(ambiente, parametrosFormais, valoresReais);
 
 		System.out.println("DECORATORS: " + decorators);
 
-		// Processa os decorators, do último para o primeiro
-		for (int i = decorators.size() - 1; i >= 0; i--) {
+		// Se houver decorators, processa do último para o primeiro
+		for (int i = 0; i < decorators.size(); i++) {
 			Id decoratorId = decorators.get(i);
 			System.out.println("GETPROCEDIMENTO: " + decoratorId);
 			DefProcedimento decoratorProc = aux.getProcedimento(decoratorId);
 
-			// Incrementa o ambiente para o decorator
+			// Incrementa ambiente para preparar o contexto do decorator
 			aux.incrementa();
 
-			// Prepara os parâmetros do decorador
 			ListaDeclaracaoParametro parametrosDecorator = decoratorProc.getParametrosFormais();
 
-			// Cria uma lista de valores para passar para o decorador
-			ListaValor listaValorDecorador = new ListaValor();
-			
-			// Adiciona a função original como primeiro parâmetro do decorator
-			listaValorDecorador = new ListaValor(new ValorFuncao(procedimento), listaValorDecorador);
+			// Cria a lista de valores com a função primeiro, depois os argumentos reais
+			ListaValor listaValorDecorador = valoresReais.writeRetornandoNovo(new ValorFuncao(procedimento));
 
-			// Obtém os argumentos originais da função e os adiciona na lista de valores
-			listaValorDecorador = parametrosReais.avaliar(aux);
-
-			// Mapeia os parâmetros no ambiente do decorador
 			aux.incrementa();
-			AmbienteExecucaoImperativa2 ambienteDecorador = bindParameters(aux, parametrosDecorator);
+			AmbienteExecucaoImperativa2 ambienteDecorador = bindParameters(aux, parametrosDecorator, listaValorDecorador);
 
 			System.out.println("EXECUTANDO DECORADOR: " + decoratorId);
+			// Executa o decorador
 			ambienteDecorador = (AmbienteExecucaoImperativa2) decoratorProc.getComando().executar(ambienteDecorador);
 
-			// Restaura o ambiente após o decorator
-			aux.restaura();
+			aux.restaura(); // Restaura após execução do decorador
 		}
 
-		// Executa o procedimento final (função original)
-		aux = (AmbienteExecucaoImperativa2) procedimento.getComando().executar(aux);
+		// Caso **não tenha decorador**, executa a função diretamente
+		if (decorators.isEmpty()) {
+			aux = (AmbienteExecucaoImperativa2) procedimento.getComando().executar(aux);
+		}
+
 		System.out.println("SAIU DO EXECUTAR DE CHAMADAPROCEDIMENTO");
-		aux.restaura();
+		aux.restaura(); // Restaura o ambiente inicial
 		return aux;
 	}
 
@@ -114,6 +113,21 @@ public class ChamadaProcedimento implements Comando {
 			listaValor = (ListaValor) listaValor.getTail();
 		}
 		System.out.println("SAIU DO BINDPARAMETERS DE CHAMADAPROCEDIMENTO");
+		return ambiente;
+	}
+
+	private AmbienteExecucaoImperativa2 bindParameters(
+			AmbienteExecucaoImperativa2 ambiente,
+			ListaDeclaracaoParametro parametrosFormais,
+			ListaValor listaValor) throws VariavelJaDeclaradaException {
+		System.out.println("ENTROU NO BINDPARAMETERS PERSONALIZADO");
+		while (listaValor.length() > 0) {
+			System.out.println("ID: " + parametrosFormais.getHead().getId() + " VALOR: " + listaValor.getHead());
+			ambiente.map(parametrosFormais.getHead().getId(), listaValor.getHead());
+			parametrosFormais = (ListaDeclaracaoParametro) parametrosFormais.getTail();
+			listaValor = (ListaValor) listaValor.getTail();
+		}
+		System.out.println("SAIU DO BINDPARAMETERS PERSONALIZADO");
 		return ambiente;
 	}
 
