@@ -31,7 +31,7 @@ public class ListaExpressao extends Lista<Expressao> {
 
 	public ListaValor avaliar(AmbienteExecucaoImperativa ambiente)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		System.out.println("ENTROU NO AVALIAR DE LISTAEXPRESSAO");
+		System.out.println("ENTROU NO AVALIAR DE LISTAEXPRESSAO: " + getHead());
 		if (length() >= 2)
 			return new ListaValor(getHead().avaliar(ambiente),
 					((ListaExpressao) getTail()).avaliar(ambiente));

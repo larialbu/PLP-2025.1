@@ -14,6 +14,8 @@ import li2.plp.imperative1.memory.AmbienteExecucaoImperativa;
 import li2.plp.imperative1.memory.EntradaVaziaException;
 import li2.plp.imperative1.memory.ErroTipoEntradaException;
 import li2.plp.imperative1.memory.ListaValor;
+import li2.plp.expressions2.expression.Valor;
+import li2.plp.imperative2.memory.ValorFuncao;
 import li2.plp.imperative1.command.Comando;
 import li2.plp.imperative2.declaration.DefProcedimento;
 import li2.plp.imperative2.declaration.ListaDeclaracaoParametro;
@@ -42,32 +44,55 @@ public class ChamadaProcedimento implements Comando {
 	public AmbienteExecucaoImperativa executar(AmbienteExecucaoImperativa amb)
 			throws IdentificadorNaoDeclaradoException,
 			IdentificadorJaDeclaradoException, EntradaVaziaException, ErroTipoEntradaException {
+
 		AmbienteExecucaoImperativa2 ambiente = (AmbienteExecucaoImperativa2) amb;
 		DefProcedimento procedimento = ambiente.getProcedimento(nomeProcedimento);
 		System.out.println("ENTROU NO EXECUTAR DE CHAMADAPROCEDIMENTO");
 
-		/*
-		 * o incrementa e o restaura neste ponto servem para criar as variveis
-		 * que serao utilizadas pela execucao do procedimento
-		 */
+		// Incrementa o ambiente para preparar a execução do procedimento
 		ambiente.incrementa();
 		ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
 		AmbienteExecucaoImperativa2 aux = bindParameters(ambiente, parametrosFormais);
-		System.out.println("ENTROU NO EXECUTAR DE CHAMADAPROCEDIMENTO");
 
-		for (int i = decorators.size()-1; i >= 0; i--){
+		System.out.println("DECORATORS: " + decorators);
+
+		// Processa os decorators, do último para o primeiro
+		for (int i = decorators.size() - 1; i >= 0; i--) {
 			Id decoratorId = decorators.get(i);
+			System.out.println("GETPROCEDIMENTO: " + decoratorId);
 			DefProcedimento decoratorProc = aux.getProcedimento(decoratorId);
+
+			// Incrementa o ambiente para o decorator
 			aux.incrementa();
-			aux = (AmbienteExecucaoImperativa2) decoratorProc.getComando().executar(aux);
+
+			// Prepara os parâmetros do decorador
+			ListaDeclaracaoParametro parametrosDecorator = decoratorProc.getParametrosFormais();
+
+			// Cria uma lista de valores para passar para o decorador
+			ListaValor listaValorDecorador = new ListaValor();
+			
+			// Adiciona a função original como primeiro parâmetro do decorator
+			listaValorDecorador = new ListaValor(new ValorFuncao(procedimento), listaValorDecorador);
+
+			// Obtém os argumentos originais da função e os adiciona na lista de valores
+			listaValorDecorador = parametrosReais.avaliar(aux);
+
+			// Mapeia os parâmetros no ambiente do decorador
+			aux.incrementa();
+			AmbienteExecucaoImperativa2 ambienteDecorador = bindParameters(aux, parametrosDecorator);
+
+			System.out.println("EXECUTANDO DECORADOR: " + decoratorId);
+			ambienteDecorador = (AmbienteExecucaoImperativa2) decoratorProc.getComando().executar(ambienteDecorador);
+
+			// Restaura o ambiente após o decorator
 			aux.restaura();
 		}
 
+		// Executa o procedimento final (função original)
 		aux = (AmbienteExecucaoImperativa2) procedimento.getComando().executar(aux);
 		System.out.println("SAIU DO EXECUTAR DE CHAMADAPROCEDIMENTO");
 		aux.restaura();
 		return aux;
-
 	}
 
 	/**
@@ -81,6 +106,7 @@ public class ChamadaProcedimento implements Comando {
 		ListaValor listaValor = parametrosReais.avaliar(ambiente);
 		System.out.println("ENTROU NO BINDPARAMETERS DE CHAMADAPROCEDIMENTO");
 		while (listaValor.length() > 0) {
+			System.out.println("ID: " + parametrosFormais.getHead().getId() + " VALOR: " + listaValor.getHead());
 			ambiente.map(parametrosFormais.getHead().getId(), listaValor
 					.getHead());
 			parametrosFormais = (ListaDeclaracaoParametro) parametrosFormais

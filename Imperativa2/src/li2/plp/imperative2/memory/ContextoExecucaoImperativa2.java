@@ -46,7 +46,7 @@ public class ContextoExecucaoImperativa2 extends ContextoExecucaoImperativa
 	public void mapProcedimento(Id idArg, DefProcedimento procedimentoId)
 			throws ProcedimentoJaDeclaradoException {
 		try {
-			System.out.println("ENTROU NO MAPPROCEDIMENTO DO AMBIENTEEXECUCAOIMPERATIVA2");
+			System.out.println("MAPPROCEDIMENTO: AMBIENTEEXECUCAOIMPERATIVA2: " + idArg);
 			this.contextoProcedimentos.map(idArg, procedimentoId);
 		} catch (VariavelJaDeclaradaException e) {
 			throw new ProcedimentoJaDeclaradoException(idArg);
@@ -64,7 +64,7 @@ public class ContextoExecucaoImperativa2 extends ContextoExecucaoImperativa
 	public DefProcedimento getProcedimento(Id idArg)
 			throws ProcedimentoNaoDeclaradoException {
 		try {
-			System.out.println("ENTROU NO GETPROCEDIMENTO DO AMBIENTEEXECUCAOIMPERATIVA2");
+			System.out.println("GETPROCEDIMENTO: AMBIENTEEXECUCAOIMPERATIVA2: " + idArg);
 			return this.contextoProcedimentos.get(idArg);
 		} catch (VariavelNaoDeclaradaException e) {
 			throw new ProcedimentoNaoDeclaradoException(idArg);

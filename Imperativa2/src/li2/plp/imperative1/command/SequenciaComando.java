@@ -34,6 +34,8 @@ public class SequenciaComando implements Comando {
 			AmbienteExecucaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException,
 			IdentificadorNaoDeclaradoException, EntradaVaziaException, ErroTipoEntradaException {
+		System.out.println("EXECUTAR: SEQUENCIACOMANDO");
+		System.out.println("COMANDO 1: " + comando1 + " COMANDO 2: " + comando2);
 		return comando2.executar(comando1.executar(ambiente));
 	}
 
