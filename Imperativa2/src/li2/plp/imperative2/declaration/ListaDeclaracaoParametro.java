@@ -58,19 +58,18 @@ public class ListaDeclaracaoParametro extends Lista<DeclaracaoParametro> {
 			if (getTail() != null) {
 				resposta = ((ListaDeclaracaoParametro) getTail())
 						.elabora(getHead().elabora(ambiente));
-				System.out.println(resposta);
 			} else {
 				resposta = getHead().elabora(ambiente);
-				System.out.println(resposta);
 			}
 		} else {
 			resposta = ambiente;
-			System.out.println(resposta);
 		}
+		System.out.println("SAIU DO ELABORA DO LISTADECLARACAOPARAMETRO");
 		return resposta;
 	}
 
 	public List<Tipo> getTipos() {
+		System.out.println("ENTROU EM GETTIPOS DE LISTADECLARACAOPARAMETRO");
 		ArrayList<Tipo> retorno = new ArrayList<Tipo>();
 
 		DeclaracaoParametro headTemp = this.head;
@@ -78,7 +77,7 @@ public class ListaDeclaracaoParametro extends Lista<DeclaracaoParametro> {
 
 		while (headTemp != null) {
 			//retorno.add(head.getTipo());
-			retorno.add(headTemp.getTipo());
+			retorno.add(0, headTemp.getTipo());
 			
 			if (tailTemp != null) {
 				headTemp = tailTemp.getHead();
@@ -88,6 +87,7 @@ public class ListaDeclaracaoParametro extends Lista<DeclaracaoParametro> {
 			}
 		}
 
+		System.out.println("SAIU DE GETTIPOS DE LISTADECLARACAOPARAMETRO");
 		return retorno;
 	}
 

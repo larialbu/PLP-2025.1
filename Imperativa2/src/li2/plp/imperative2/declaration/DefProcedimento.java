@@ -1,5 +1,7 @@
 package li2.plp.imperative2.declaration;
 
+import java.util.ArrayList;
+import java.util.List;
 import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.imperative1.command.Comando;
@@ -68,7 +70,24 @@ public class DefProcedimento {
     }
 
 	public Tipo getTipo() {
-		System.out.println("GETTIPO DO DEFPROCEDIMENTO: " + parametrosFormais.getTipos());
-		return new TipoProcedimento(parametrosFormais.getTipos());
+		System.out.println("ENTRANDO EM GETTIPO DO DEFPROCEDIMENTO: " + parametrosFormais.getTipos());
+		List<Tipo> listaTipos = parametrosFormais.getTipos();
+
+		if(retornaValor()){
+			ListaTipos listaTiposFunc = new ListaTipos();
+
+			for(Tipo tipo : listaTipos){
+				listaTiposFunc.adicionar(tipo);
+				System.out.println("TIPO DE PARAMETRO: " + tipo);
+			}
+
+			TipoSubAlgoritmo tipoFunc = new TipoSubAlgoritmo(listaTiposFunc, tipoRetorno);
+			System.out.println("SAINDO DE GETTIPO DE DEFPROCEDIMENTO FUNC: " + tipoFunc);
+			return tipoFunc;
+		} else {
+			TipoProcedimento tipoProc = new TipoProcedimento(listaTipos, TipoPrimitivo.VOID);
+			System.out.println("SAINDO DE GETTIPO DE DEFPROCEDIMENTO PROC: " + tipoProc);
+			return tipoProc;
+		}
 	}
 }

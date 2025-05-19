@@ -29,6 +29,7 @@ public class Write implements IO {
 	public AmbienteExecucaoImperativa executar(
 			AmbienteExecucaoImperativa ambiente)
 			throws VariavelJaDeclaradaException, VariavelNaoDeclaradaException {
+		System.out.println("WRITE: AVALIAR: " + expressao);
 		ambiente.write(expressao.avaliar(ambiente));
 		return ambiente;
 	}

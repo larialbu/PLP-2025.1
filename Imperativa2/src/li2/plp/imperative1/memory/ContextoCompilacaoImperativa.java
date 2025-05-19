@@ -1,6 +1,7 @@
 package li2.plp.imperative1.memory;
 
 import li2.plp.expressions1.util.Tipo;
+import li2.plp.imperative2.declaration.TipoSubAlgoritmo;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.memory.Contexto;
 import li2.plp.expressions2.memory.ContextoCompilacao;
@@ -15,6 +16,8 @@ public class ContextoCompilacaoImperativa extends ContextoCompilacao
 
     private Contexto<DefProcedimento> contextoProcedimentos;
 
+    private Contexto<TipoSubAlgoritmo> contextoFuncoes;
+
     /**
      * A pilha de blocos de contexto.
      */    
@@ -26,17 +29,20 @@ public class ContextoCompilacaoImperativa extends ContextoCompilacao
     public ContextoCompilacaoImperativa(ListaValor entrada){
         super();
         this.entrada = entrada;
-        this.contextoProcedimentos = new Contexto<>();     
+        this.contextoProcedimentos = new Contexto<>();    
+        this.contextoFuncoes = new Contexto<>(); 
     }
 
     public void incrementa(){
         super.incrementa();
         contextoProcedimentos.incrementa();
+        contextoFuncoes.incrementa();
     }
 
     public void restaura(){
         super.restaura();
         contextoProcedimentos.restaura();
+        contextoFuncoes.restaura();
     }
 
     public Tipo getTipoEntrada() throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException,
@@ -52,8 +58,6 @@ public class ContextoCompilacaoImperativa extends ContextoCompilacao
     @Override
     public DefProcedimento getProcedimento(Id id) throws IdentificadorNaoDeclaradoException{
         try{
-            System.out.println("ENTROU NO GETPROCEDIMENTO DO AMBIENTECOMPILACAOIMPERATIVA PARA: " + id);
-            System.out.println(this.contextoProcedimentos);
             return this.contextoProcedimentos.get(id);
         } catch (VariavelNaoDeclaradaException e) {
             throw new IdentificadorNaoDeclaradoException("Identificador não declarado: " + id.getIdName());
@@ -61,13 +65,19 @@ public class ContextoCompilacaoImperativa extends ContextoCompilacao
     }
 
     public void mapProcedimento(Id id, DefProcedimento procedimento) throws IdentificadorJaDeclaradoException{
-        System.out.println("ENTROU NO MAPPROCEDIMENTO DO AMBIENTECOMPILACAOIMPERATIVA");
         try{
-            System.out.println(id + " " + procedimento);
             this.contextoProcedimentos.map(id, procedimento);
         } catch (VariavelJaDeclaradaException e){
             throw new IdentificadorNaoDeclaradoException("Identificador ja declarado: " + id.getIdName());
         }
+    }
+
+    public void mapFuncao(Id id, TipoSubAlgoritmo tipoFuncao) throws VariavelJaDeclaradaException{
+        this.contextoFuncoes.map(id, tipoFuncao);
+    }
+
+    public TipoSubAlgoritmo getFuncao(Id id) throws VariavelNaoDeclaradaException {
+        return this.contextoFuncoes.get(id);
     }
 }
 

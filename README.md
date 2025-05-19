@@ -172,7 +172,7 @@ Tipo ::= TipoPrimitivo | TipoSubAlgoritmo
 
 TipoPrimitivo ::= "string" | "int" | "boolean" | "void"
 
-TipoSubAlgoritmo ::= "func" Id "(" [ ListaTipos ] ")" "->" Tipo
+TipoSubAlgoritmo ::= "func" Id "(" [ ListaTipos ] ")" "->" TipoPrimitivo
 
 ListaTipos ::= Tipo | Tipo "," ListaTipos
 

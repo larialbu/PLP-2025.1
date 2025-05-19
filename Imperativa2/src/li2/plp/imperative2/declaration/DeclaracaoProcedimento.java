@@ -40,24 +40,48 @@ public class DeclaracaoProcedimento extends Declaracao {
 		return this.id;
 	}
 
+	public void mapa(AmbienteCompilacaoImperativa ambiente)
+			throws IdentificadorJaDeclaradoException {
+		System.out.println("ENTROU NO MAPA DE DECLARACAOPROCEDIMENTO");
+
+		Tipo tipo = defProcedimento.getTipo();
+		ambiente.mapProcedimento(id, defProcedimento);
+		System.out.println("PROCEDIMENTO " + id + " MAPPROCEDIMENTO");
+
+		if(defProcedimento.retornaValor()){
+			ListaTipos listaTipos = new ListaTipos();
+			ListaDeclaracaoParametro lista = defProcedimento.getParametrosFormais();
+
+			while (lista != null && lista.getHead() != null){
+				listaTipos.adicionar(lista.getHead().getTipo());
+				lista = (ListaDeclaracaoParametro) lista.getTail();
+			}
+
+			TipoSubAlgoritmo tipoFunc = new TipoSubAlgoritmo(listaTipos, defProcedimento.getTipoRetorno(ambiente));
+			ambiente.map(id, tipoFunc);
+			System.out.println("FUNCAO " + id + " MAPEADA COMO: " + tipoFunc);
+		} else {
+			ambiente.map(id, tipo);
+			System.out.println("PROCEDIMENTO: " + id + " MAPEADO COMO: " + tipo);
+		}
+
+		System.out.println("SAIU DO MAPA DE DECLARACAOPROCEDIMENTO");
+	}
+
 	@Override
 	public boolean checaTipo(AmbienteCompilacaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException,
-			IdentificadorNaoDeclaradoException, EntradaVaziaException {
+				IdentificadorNaoDeclaradoException, EntradaVaziaException {
 
 		boolean resposta;
-		System.out.println("ENTROU NO CHECATIPO DE DECLARACAOPROCEDIMENTO para: " + id + " " + defProcedimento.getTipo());
 
-		ambiente.map(id, defProcedimento.getTipo());
-		ambiente.mapProcedimento(id, defProcedimento);
-
+		System.out.println("ENTROU NO CHECATIPO DE DECLARACAOPROCEDIMENTO: " + id);
 
 		DefProcedimento procedimento = getDefProcedimento();
 		ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
 
 		if (parametrosFormais.checaTipo(ambiente)) {
-			System.out.println("PRIMEIRO IF DE CHECATIPO");
-
+			System.out.println("IF: PARAMETROS BEM TIPADOS");
 			ambiente.incrementa();
 			ambiente = parametrosFormais.elabora(ambiente);
 
@@ -65,47 +89,46 @@ public class DeclaracaoProcedimento extends Declaracao {
 			resposta = comando.checaTipo(ambiente);
 
 			if (comando.contemReturn()) {
-				System.out.println("SEGUNDO IF DE CHECATIPO");
+				System.out.println("IF: COMANDO CONTEM RETURN");
 				Tipo tipoRetornado = comando.getTipoRetorno(ambiente);
+				Tipo tipoDeclarado = procedimento.getTipoRetorno(ambiente);
 
-				if (!TipoPrimitivo.VOID.eIgual(tipoRetornado)) {
-					System.out.println("TERCEIRO IF DE CHECATIPO");
-					Tipo tipoDeclarado = procedimento.getTipoRetorno(ambiente);
-					System.out.println("Declarado: " + tipoDeclarado + ". Retornado: " + tipoRetornado);
+				if (tipoRetornado instanceof TipoSubAlgoritmo) {
+					System.out.println("IF: TIPORETORNADO EH FUNCAO");
+					if (!(tipoDeclarado instanceof TipoSubAlgoritmo) ||
+							!tipoRetornado.eIgual(tipoDeclarado)) {
+						System.out.println("IF: TIPODECLARADO NAO EH FUNCAO OU TIPOS NAO IGUAIS");
+						resposta = false;
+					}
+				} else if (!TipoPrimitivo.VOID.eIgual(tipoRetornado)) {
+					System.out.println("IF: TIPORETORNADO NAO EH VOID");
 					if (!tipoDeclarado.eIgual(tipoRetornado)) {
-						System.out.println("QUARTO IF DE CHECATIPO");
+						System.out.println("IF: TIPORETORNADO DIFERENTE DE TIPODECLARADO");
 						resposta = false;
 					}
-				} else {
-						System.out.println("PRIMEIRO ELSE DE CHECATIPO");
-					// Return do tipo VOID mas não devia retornar nada
-					if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipoRetorno(ambiente))) {
-						System.out.println("QUINTO IF DE CHECATIPO");
-						resposta = false;
-					}
+				} else if (!TipoPrimitivo.VOID.eIgual(tipoDeclarado)) {
+					System.out.println("IF: TIPO RETORNADO EH VOID E DECLARADO NAO");
+					resposta = false;
 				}
 			} else {
-				System.out.println("SEGUNDO ELSE DE CHECATIPO");
-				// Se não tem return, o tipo declarado precisa ser VOID
-				Tipo tipoDeclarado = procedimento.getTipoRetorno(ambiente);
-				System.out.println("Declarado: " + tipoDeclarado);
-				if (!TipoPrimitivo.VOID.eIgual(tipoDeclarado)) {
-					System.out.println("SEXTO IF DE CHECATIPO");
+				System.out.println("IF: COMANDO NAO CONTEM RETURN");
+				if (!TipoPrimitivo.VOID.eIgual(procedimento.getTipoRetorno(ambiente))) {
+					System.out.println("IF: TIPODECLARADO NAO EH VOID");
 					resposta = false;
 				}
 			}
 
 			ambiente.restaura();
-			
 		} else {
+			System.out.println("IF: PARAMETROS MAL TIPADOS");
 			resposta = false;
 		}
-		System.out.println("SAIU DO CHECATIPO DE DECLARACAOPROCEDIMENTO");
+		System.out.println("SAIU DO CHECATIPO DE DECLARACAOPROCEDIMENTO: " + resposta);
 		return resposta;
 	}
 
 	private DefProcedimento getDefProcedimento() {
-		System.out.println("ENTROU NO GETDEFPROCEDIMENTO DE DECLARACAOPROCEDIMENTO");
+		System.out.println("GETDEFPROCEDIMENTO DE DECLARACAOPROCEDIMENTO");
 		return this.defProcedimento;
 	}
 }
