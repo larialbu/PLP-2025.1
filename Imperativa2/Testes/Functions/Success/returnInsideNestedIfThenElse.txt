@@ -1,0 +1,10 @@
+{
+    proc int verifica(boolean a, boolean b){
+        if a then 
+            if b then return 1 else return 2
+        else 
+            return 3
+        
+    };
+    write(verifica(true, false))
+}

@@ -1,0 +1,10 @@
+{
+    var x = 0,
+    proc int testeWhile(){
+        while not x == 3 do
+            write(x);
+            x := x + 1;
+	    return 42
+    }
+    write(testeWhile())
+}

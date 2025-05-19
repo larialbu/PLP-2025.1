@@ -1,0 +1,26 @@
+{
+  var resultado = 0,
+
+  proc log(func f(int, int) -> int, int a, int b) {
+    write("Iniciando log da função...");
+    write("Argumentos:");
+    write(a);
+    write(b);
+    @tempo call soma(3,4);
+    write("Resultado:");
+    write(resultado);
+    write("Finalizando log da função.")
+  },
+
+  proc tempo(func f(int, int) -> int, int a, int b) {
+    write("Iniciando medição de tempo...");
+    resultado := f(a, b);
+    write("Tempo de execução: 0.001s") // apenasExemplo
+  },
+
+  proc int soma(int x, int y) {
+    return x + y
+  };
+
+  @log call soma(3, 4)
+}

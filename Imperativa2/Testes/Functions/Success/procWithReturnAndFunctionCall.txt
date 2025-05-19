@@ -1,0 +1,8 @@
+{
+    var resultado = 0,
+    proc int soma(int y, int z){
+        return y+z
+    };
+    resultado := soma(3,4);
+    write(resultado)
+}

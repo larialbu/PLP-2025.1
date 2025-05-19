@@ -1,0 +1,10 @@
+{
+    var resultado = 0;
+    {
+        proc int soma(int a, int b){
+            return a + b
+        };
+        resultado := soma(10, 5)
+    };
+    write(resultado)
+} 

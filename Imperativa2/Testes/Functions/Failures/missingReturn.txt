@@ -1,0 +1,7 @@
+{
+    var x = 0,
+    proc int nada() {
+	    x := 1
+    };
+    write(1)
+} 

@@ -1,0 +1,10 @@
+{
+    var a = 1, var b = 2, var c = 0,
+    proc int soma(int x, int y) {
+        return x + y
+    };
+    c := soma(a, b);
+    write(c);
+    c := soma(c, 10);
+    write(c)
+}

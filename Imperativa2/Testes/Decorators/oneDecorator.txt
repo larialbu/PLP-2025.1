@@ -1,0 +1,15 @@
+{
+var x = 0, var resultado = 0,
+proc log(func f(int, int) -> int, int a, int b) {
+    write("Chamando função com argumentos:");
+    write(a);
+    write(b);
+    resultado := f(a, b);
+    write("Resultado:");
+    write(resultado)
+},
+proc int soma(int x, int y) {
+    return x + y
+};
+@log call soma(3, 4)
+}

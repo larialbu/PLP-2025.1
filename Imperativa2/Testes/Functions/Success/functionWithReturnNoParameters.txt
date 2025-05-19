@@ -1,0 +1,6 @@
+{
+    proc int retornaCinco() {
+        return 5
+    };
+    write(retornaCinco())
+}

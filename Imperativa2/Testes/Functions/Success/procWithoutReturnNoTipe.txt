@@ -1,0 +1,7 @@
+{
+    var x = 0, var y = 1, var z = 3,
+	proc escreve(){
+		write(x+1)
+	};
+	call escreve()
+}

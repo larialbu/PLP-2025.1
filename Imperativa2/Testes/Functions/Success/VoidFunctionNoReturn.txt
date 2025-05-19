@@ -1,0 +1,7 @@
+{
+    var x = 0,
+    proc void f() {
+        write(999)
+    };
+    call f()
+}

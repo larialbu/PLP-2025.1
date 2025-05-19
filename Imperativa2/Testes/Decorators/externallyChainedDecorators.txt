@@ -1,0 +1,21 @@
+{
+  var resultado = 0,
+
+  proc inicial(func f(int, int) -> int, int a, int b) {
+    write("decorador INICIAL")
+  },
+
+  proc interno(func f(int, int) -> int, int a, int b) {
+    write("decorador ENVOLVE SOMA");
+    resultado := f(a, b);
+    write(resultado);
+    write("decorador ENVOLVE SOMA")
+  },
+
+  proc int soma(int x, int y) {
+    write("Executando SOMA");
+    return x + y
+  };
+
+  @inicial @interno call soma(10, 20)
+}
