@@ -1,0 +1,7 @@
+{
+    var x = 0,
+    proc int verifica(boolean cond, int num){
+        if cond then return num else return 0
+    };
+    write(verifica(true, 42))
+}
