@@ -1,0 +1,15 @@
+{
+  var resultado = 0,
+  proc monitor(func f(int) -> int, int n) {
+    write("Chamando com n =");
+    write(n);
+    resultado := f(n);
+    write(resultado)
+  },
+
+  proc int recursao(int n) {
+    if n == 0 then return 0 else return n + recursao(n - 1)
+  };
+
+  @monitor call recursao(3)
+}

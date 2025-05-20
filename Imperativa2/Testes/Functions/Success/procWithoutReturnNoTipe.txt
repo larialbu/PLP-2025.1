@@ -1,5 +1,5 @@
 {
-    var x = 0, var y = 1, var z = 3,
+    var x = 0,
 	proc escreve(){
 		write(x+1)
 	};

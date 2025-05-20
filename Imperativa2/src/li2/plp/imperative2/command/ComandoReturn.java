@@ -25,6 +25,7 @@ public class ComandoReturn implements Comando{
                    EntradaVaziaException, ErroTipoEntradaException {
         //lança uma exceção especial para "interromper" e retornar o valor.
         System.out.println("ENTROU NO EXECUTAR DE COMANDORETURN");
+        System.out.println("AVALIAR RETURN: " + expressao.avaliar(amb));
         throw new ReturnException(expressao.avaliar(amb));
     }
 

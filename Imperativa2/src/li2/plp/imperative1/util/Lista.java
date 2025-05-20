@@ -50,4 +50,7 @@ public class Lista<T> {
 		}
 	}
 
+	public boolean eVazia() {
+		return head == null;
+	}
 }

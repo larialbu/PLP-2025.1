@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import li2.plp.expressions1.util.Tipo;
+import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.memory.VariavelJaDeclaradaException;
 import li2.plp.expressions2.memory.VariavelNaoDeclaradaException;
 import li2.plp.imperative1.memory.AmbienteCompilacaoImperativa;
@@ -72,13 +73,18 @@ public class ListaDeclaracaoParametro extends Lista<DeclaracaoParametro> {
 		System.out.println("ENTROU EM GETTIPOS DE LISTADECLARACAOPARAMETRO");
 		ArrayList<Tipo> retorno = new ArrayList<Tipo>();
 
+		// Caso especial: único parâmetro é 'void' => função sem parâmetros
+		if ((this.tail == null || this.tail.eVazia()) && this.head != null && this.head.getTipo().eIgual(TipoPrimitivo.VOID)) {
+			System.out.println("FUNÇÃO DECLARADA COM 'void' — retornando lista vazia");
+			return retorno; // lista vazia: func(void) => func([])
+		}
+
 		DeclaracaoParametro headTemp = this.head;
 		Lista<DeclaracaoParametro> tailTemp = this.tail;
 
 		while (headTemp != null) {
-			//retorno.add(head.getTipo());
 			retorno.add(0, headTemp.getTipo());
-			
+
 			if (tailTemp != null) {
 				headTemp = tailTemp.getHead();
 				tailTemp = tailTemp.getTail();
@@ -90,5 +96,4 @@ public class ListaDeclaracaoParametro extends Lista<DeclaracaoParametro> {
 		System.out.println("SAIU DE GETTIPOS DE LISTADECLARACAOPARAMETRO");
 		return retorno;
 	}
-
 }

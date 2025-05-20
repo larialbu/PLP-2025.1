@@ -43,54 +43,65 @@ public class ChamadaProcedimento implements Comando {
 
 	public AmbienteExecucaoImperativa executar(AmbienteExecucaoImperativa amb)
 			throws IdentificadorNaoDeclaradoException,
-			IdentificadorJaDeclaradoException, EntradaVaziaException, 
+			IdentificadorJaDeclaradoException, EntradaVaziaException,
 			ErroTipoEntradaException {
 
 		AmbienteExecucaoImperativa2 ambiente = (AmbienteExecucaoImperativa2) amb;
-		DefProcedimento procedimento = ambiente.getProcedimento(nomeProcedimento);
+		DefProcedimento procedimento;
+
 		System.out.println("ENTROU NO EXECUTAR DE CHAMADAPROCEDIMENTO");
+
+		try {
+			// Primeiro tenta como variável do ambiente (função passada como parâmetro)
+			Valor valorFuncao = ambiente.get(nomeProcedimento);
+			if (!(valorFuncao instanceof ValorFuncao)) {
+				throw new RuntimeException("Identificador '" + nomeProcedimento + "' não é uma função válida.");
+			}
+			procedimento = ((ValorFuncao) valorFuncao).getValor();
+			System.out.println("FUNÇÃO '" + nomeProcedimento + "' ENCONTRADA COMO VARIÁVEL");
+		} catch (IdentificadorNaoDeclaradoException e) {
+			// Caso não esteja no ambiente, busca como procedimento global
+			procedimento = ambiente.getProcedimento(nomeProcedimento);
+			System.out.println("FUNÇÃO '" + nomeProcedimento + "' ENCONTRADA COMO PROCEDIMENTO GLOBAL");
+		}
 
 		// Avalia os parâmetros reais uma vez
 		ListaValor valoresReais = parametrosReais.avaliar(ambiente);
 
-		// Incrementa o ambiente e faz o bind dos parâmetros para a chamada normal
+		// Incrementa o ambiente e faz o bind dos parâmetros
 		ambiente.incrementa();
 		ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
 		AmbienteExecucaoImperativa2 aux = bindParameters(ambiente, parametrosFormais, valoresReais);
 
 		System.out.println("DECORATORS: " + decorators);
 
-		// Se houver decorators, processa do último para o primeiro
+		// Executa decorators do último para o primeiro
 		for (int i = 0; i < decorators.size(); i++) {
 			Id decoratorId = decorators.get(i);
 			System.out.println("GETPROCEDIMENTO: " + decoratorId);
 			DefProcedimento decoratorProc = aux.getProcedimento(decoratorId);
 
-			// Incrementa ambiente para preparar o contexto do decorator
 			aux.incrementa();
 
 			ListaDeclaracaoParametro parametrosDecorator = decoratorProc.getParametrosFormais();
-
-			// Cria a lista de valores com a função primeiro, depois os argumentos reais
 			ListaValor listaValorDecorador = valoresReais.writeRetornandoNovo(new ValorFuncao(procedimento));
 
 			aux.incrementa();
 			AmbienteExecucaoImperativa2 ambienteDecorador = bindParameters(aux, parametrosDecorator, listaValorDecorador);
 
 			System.out.println("EXECUTANDO DECORADOR: " + decoratorId);
-			// Executa o decorador
 			ambienteDecorador = (AmbienteExecucaoImperativa2) decoratorProc.getComando().executar(ambienteDecorador);
 
-			aux.restaura(); // Restaura após execução do decorador
+			aux.restaura();
 		}
 
-		// Caso **não tenha decorador**, executa a função diretamente
+		// Se não houver decoradores, executa diretamente
 		if (decorators.isEmpty()) {
 			aux = (AmbienteExecucaoImperativa2) procedimento.getComando().executar(aux);
 		}
 
 		System.out.println("SAIU DO EXECUTAR DE CHAMADAPROCEDIMENTO");
-		aux.restaura(); // Restaura o ambiente inicial
+		aux.restaura(); // Restaura escopo
 		return aux;
 	}
 
@@ -144,11 +155,21 @@ public class ChamadaProcedimento implements Comando {
 	 */
 	public boolean checaTipo(AmbienteCompilacaoImperativa amb)
 			throws IdentificadorJaDeclaradoException, IdentificadorNaoDeclaradoException {
-		
+
 		System.out.println("ENTROU NO CHECATIPO DE CHAMADAPROCEDIMENTO: " + this.nomeProcedimento);
 
-		Tipo tipoDeclarado = amb.get(this.nomeProcedimento);
-		System.out.println("TIPO DECLARADO: " + tipoDeclarado.getClass());
+		Tipo tipoDeclarado;
+
+		try {
+			// Tenta obter como variável (função passada como parâmetro, por exemplo)
+			tipoDeclarado = amb.getFuncao(nomeProcedimento);
+			System.out.println("TIPO DECLARADO ENCONTRADO COMO VARIÁVEL: " + tipoDeclarado.getClass());
+		} catch (VariavelNaoDeclaradaException e) {
+			// Se não achar como variável, tenta como procedimento global
+			DefProcedimento proc = amb.getProcedimento(nomeProcedimento);
+			tipoDeclarado = proc.getTipo();
+			System.out.println("TIPO DECLARADO ENCONTRADO COMO PROCEDIMENTO GLOBAL: " + tipoDeclarado.getClass());
+		}
 
 		List<Tipo> parametrosReaisTipos = parametrosReais.getTipos(amb);
 
@@ -160,7 +181,7 @@ public class ChamadaProcedimento implements Comando {
 		} else if (tipoDeclarado instanceof TipoProcedimento) {
 			tipoEsperado = (TipoProcedimento) tipoDeclarado;
 		} else {
-			System.out.println("TIPO NAO É PROCEDIMENTO OU FUNÇÃO");
+			System.out.println("TIPO NÃO É PROCEDIMENTO OU FUNÇÃO");
 			return false;
 		}
 

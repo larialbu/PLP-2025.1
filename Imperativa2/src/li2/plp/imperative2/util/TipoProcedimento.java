@@ -24,18 +24,40 @@ public class TipoProcedimento implements Tipo {
 	}
 
 
+	@Override
 	public boolean eIgual(Tipo tipo) {
 		if (tipo instanceof TipoProcedimento) {
 			TipoProcedimento tipoProc = (TipoProcedimento) tipo;
-			return tipoProc.tiposParametrosFormais
-					.equals(this.tiposParametrosFormais);
+			return parametrosEquivalentes(this.tiposParametrosFormais, tipoProc.tiposParametrosFormais) &&
+				this.tipoRetorno.eIgual(tipoProc.tipoRetorno);
 		}
-        if (tipo instanceof TipoSubAlgoritmo) {
-            TipoSubAlgoritmo tipoFunc = (TipoSubAlgoritmo) tipo;
-            return tiposParametrosFormais.equals(tipoFunc.getParametros().getTipos()) &&
-                   tipoRetorno.eIgual(tipoFunc.getRetorno());
-        }
-        return false;
+		if (tipo instanceof TipoSubAlgoritmo) {
+			TipoSubAlgoritmo tipoFunc = (TipoSubAlgoritmo) tipo;
+			return parametrosEquivalentes(this.tiposParametrosFormais, tipoFunc.getParametros().getTipos()) &&
+				this.tipoRetorno.eIgual(tipoFunc.getRetorno());
+		}
+		return false;
+	}
+
+	private boolean parametrosEquivalentes(List<Tipo> a, List<Tipo> b) {
+		boolean aVazia = (a == null || a.isEmpty());
+		boolean bVazia = (b == null || b.isEmpty());
+
+		// Lista vazia == lista com void
+		if (aVazia && bVazia) {
+			return true;
+		}
+
+		if (a.size() == 1 && a.get(0).eIgual(li2.plp.expressions1.util.TipoPrimitivo.VOID) && bVazia) {
+			return true;
+		}
+
+		if (b.size() == 1 && b.get(0).eIgual(li2.plp.expressions1.util.TipoPrimitivo.VOID) && aVazia) {
+			return true;
+		}
+
+		// Caso geral, comparar listas diretamente
+		return a.equals(b);
 	}
 
 	public boolean eInteiro() {

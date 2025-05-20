@@ -1,0 +1,15 @@
+{
+  var resultado = 0,
+
+  proc incrementaArgs(func f(int, int) -> int, int a, int b) {
+    write("Incrementando argumentos");
+    resultado := f(a+1,b+1)
+  },
+
+  proc int soma(int x, int y) {
+    return x + y
+  };
+
+  @incrementaArgs call soma(2, 3);
+  write(resultado)
+}

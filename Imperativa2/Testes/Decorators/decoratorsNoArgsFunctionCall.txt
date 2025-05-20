@@ -1,0 +1,14 @@
+{
+  var x = 0,
+  proc audit(func f(void) -> int) {
+    write("Auditando chamada...");
+    x := f();
+    write(x)
+  },
+
+  proc int retornaCinco() {
+    return 5
+  };
+
+  @audit call retornaCinco()
+}

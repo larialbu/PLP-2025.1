@@ -39,44 +39,55 @@ public class ChamadaFuncao implements Expressao {
         System.out.println("CONSTRUTOR DE CHAMADAFUNCAO");
     }
 
-    @Override
-    public Valor avaliar(AmbienteExecucao ambiente) {
-        System.out.println("ENTROU NO AVALIAR DE CHAMADAFUNCAO");
+@Override
+public Valor avaliar(AmbienteExecucao ambiente) {
+    System.out.println("ENTROU NO AVALIAR DE CHAMADAFUNCAO");
+
+    try {
+        AmbienteExecucaoImperativa2 aux = (AmbienteExecucaoImperativa2) ambiente;
+
+        DefProcedimento procedimento;
 
         try {
-            AmbienteExecucaoImperativa2 aux = (AmbienteExecucaoImperativa2) ambiente;
+            // Primeiro, tenta obter como variável local
+            Valor possivelFuncao = aux.get(nomeProcedimento);
 
-            DefProcedimento procedimento;
-
-            try {
-                // Primeiro, tenta obter como variável local
-                Valor possivelFuncao = aux.get(nomeProcedimento);
-
-                if (!(possivelFuncao instanceof ValorFuncao)) {
-                    throw new RuntimeException("Identificador '" + nomeProcedimento + "' não é uma função.");
-                }
-
-                procedimento = ((ValorFuncao) possivelFuncao).getValor();
-                System.out.println("FUNÇÃO '" + nomeProcedimento + "' ENCONTRADA COMO VARIÁVEL (ARGUMENTO)");
-            } catch (IdentificadorNaoDeclaradoException e) {
-                // Se não existir como variável, tenta como procedimento global
-                procedimento = aux.getProcedimento(nomeProcedimento);
-                System.out.println("FUNÇÃO '" + nomeProcedimento + "' ENCONTRADA COMO PROCEDIMENTO GLOBAL");
+            if (!(possivelFuncao instanceof ValorFuncao)) {
+                throw new RuntimeException("Identificador '" + nomeProcedimento + "' não é uma função.");
             }
 
-            if (!procedimento.retornaValor()) {
-                throw new RuntimeException("Procedimento '" + nomeProcedimento + "' não retorna valor.");
-            }
-
-            // Avalia os parâmetros apenas uma vez
-            ListaValor valoresReais = parametrosReais.avaliar(aux);
-            return avaliarComValores(aux, procedimento, valoresReais);
-
-        } catch (Exception e) {
-            System.out.println("SAIU (EXCEPTION) DO AVALIAR DE CHAMADAFUNCAO");
-            throw new RuntimeException("Erro durante a avaliação da função: " + e.getMessage(), e);
+            procedimento = ((ValorFuncao) possivelFuncao).getValor();
+            System.out.println("FUNÇÃO '" + nomeProcedimento + "' ENCONTRADA COMO VARIÁVEL (ARGUMENTO)");
+        } catch (IdentificadorNaoDeclaradoException e) {
+            // Se não existir como variável, tenta como procedimento global
+            procedimento = aux.getProcedimento(nomeProcedimento);
+            System.out.println("FUNÇÃO '" + nomeProcedimento + "' ENCONTRADA COMO PROCEDIMENTO GLOBAL");
         }
+
+        if (!procedimento.retornaValor()) {
+            throw new RuntimeException("Procedimento '" + nomeProcedimento + "' não retorna valor.");
+        }
+
+        // ✅ NOVO TRECHO — trata [void] como chamada sem argumentos reais
+        ListaDeclaracaoParametro parametrosFormais = procedimento.getParametrosFormais();
+        boolean formaisSaoVoid = parametrosFormais != null &&
+                                 parametrosFormais.getTipos().size() == 1 &&
+                                 parametrosFormais.getTipos().get(0).eIgual(TipoPrimitivo.VOID);
+
+        ListaValor valoresReais;
+        if ((parametrosReais == null || parametrosReais.length() == 0) && formaisSaoVoid) {
+            valoresReais = new ListaValor(); // chamada vazia
+        } else {
+            valoresReais = parametrosReais.avaliar(aux);
+        }
+
+        return avaliarComValores(aux, procedimento, valoresReais);
+
+    } catch (Exception e) {
+        System.out.println("SAIU (EXCEPTION) DO AVALIAR DE CHAMADAFUNCAO");
+        throw new RuntimeException("Erro durante a avaliação da função: " + e.getMessage(), e);
     }
+}
 
     public Valor avaliarComValores(AmbienteExecucaoImperativa2 ambiente, DefProcedimento procedimento, ListaValor valoresReais) 
         throws IdentificadorNaoDeclaradoException, IdentificadorJaDeclaradoException, EntradaVaziaException, ErroTipoEntradaException{
@@ -137,25 +148,25 @@ public class ChamadaFuncao implements Expressao {
             AmbienteCompilacaoImperativa aux = (AmbienteCompilacaoImperativa) ambiente;
             TipoSubAlgoritmo tipoFuncao;
             
-            try{
+            try {
                 tipoFuncao = aux.getFuncao(nomeProcedimento);
                 System.out.println("FUNCAO " + nomeProcedimento + " ENCONTRADA NAS VARIAVEIS");
             } catch (VariavelNaoDeclaradaException e1) {
-                try{
+                try {
                     DefProcedimento procedimento = aux.getProcedimento(nomeProcedimento);
                     tipoFuncao = (TipoSubAlgoritmo) procedimento.getTipo();
                     System.out.println("FUNCAO " + nomeProcedimento + " ENCONTRADA COMO PROCEDIMENTO");
-                } catch (IdentificadorNaoDeclaradoException e2){
+                } catch (IdentificadorNaoDeclaradoException e2) {
                     System.out.println("FUNCAO " + nomeProcedimento + " NAO ENCONTRADA NO AMBIENTE");
                     return false;
                 }
             }
 
-            if(tipoFuncao == null || !tipoFuncao.eValido()){
+            if (tipoFuncao == null || !tipoFuncao.eValido()) {
                 System.out.println("TIPO INVALIDO PARA A FUNCAO " + nomeProcedimento);
                 return false;
             }
-            
+
             ListaDeclaracaoParametro parametrosFormais = converteTiposParaDeclaracao(tipoFuncao.getParametros());
 
             System.out.println("PARAMETROSFORMAIS: " + parametrosFormais);
@@ -164,16 +175,20 @@ public class ChamadaFuncao implements Expressao {
             boolean formaisVazios = (parametrosFormais == null || parametrosFormais.getTipos().isEmpty());
             boolean reaisVazios = (parametrosReais == null || parametrosReais.length() == 0);
 
-            if (formaisVazios && reaisVazios) {
+            // Tratamento especial: função declarada como ([void]) e chamada com zero argumentos
+            if (!formaisVazios && reaisVazios && parametrosFormais.getTipos().size() == 1 
+                && parametrosFormais.getTipos().get(0).eIgual(TipoPrimitivo.VOID)) {
+                parametrosOk = true;
+            } else if (formaisVazios && reaisVazios) {
                 parametrosOk = true;
             } else if (!formaisVazios && !reaisVazios) {
                 parametrosOk = parametrosReais.checaTipo(ambiente, parametrosFormais);
             } else {
                 parametrosOk = false;
             }
-            
+
             boolean retornaValor = !tipoFuncao.getRetorno().eIgual(TipoPrimitivo.VOID);
-            
+
             System.out.println("SAIU DO CHECATIPO DE CHAMADAFUNCAO: " + parametrosOk + " " + retornaValor);
             return parametrosOk && retornaValor;
 

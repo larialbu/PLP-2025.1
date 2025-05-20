@@ -1,0 +1,13 @@
+{
+  proc decoradorCheck(func f(void) -> void) {
+    write("Antes da execução");
+    call f();
+    write("Depois da execução")
+  },
+
+  proc void fazAlgo() {
+    write("Executando função sem retorno")
+  };
+
+  @decoradorCheck call fazAlgo()
+}
