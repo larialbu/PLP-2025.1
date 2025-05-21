@@ -13,13 +13,13 @@ Informações sobre a disciplina podem ser encontradas no site: [IN1007 - UFPE](
 # Descrição do Projeto
 
 ## Decorators para funções e métodos
-Este projeto implementa suporte a decorators para funções e métodos em uma linguagem customizada criada com Java e JavaCC, inspirado no [PEP 318 — Decorators for Functions and Methods](https://peps.python.org/pep-0318/) para Python.
-Decorators permitem modificar ou estender o comportamento de funções de forma modular e reutilizável. Com eles, é possível adicionar funcionalidades sem alterar diretamente o corpo da função.
+Este projeto implementa suporte a decorators para procedimentos na PLP, ums linguagem customizada criada com Java e JavaCC, essa extensão foi inspirada no [PEP 318 — Decorators for Functions and Methods](https://peps.python.org/pep-0318/) para Python.
+Decorators permitem modificar ou estender o comportamento de funções de forma modular e reutilizável. Com eles, é possível adicionar funcionalidades sem alterar diretamente o corpo da função original.
 
 ## Escopo do Projeto
-Estender a Linguagem Imperativa 2 apresentada na disciplina para que ela ofereça suporte à aplicação de decorators sobre definições de funções. O objetivo é permitir que funções sejam modificadas ou estendidas de forma modular, por meio da sintaxe @nomeDoDecorator na chamada da função.
+Estender a Linguagem Imperativa 2 (LI2) apresentada na disciplina para que ela ofereça suporte à aplicação de decorators sobre definições de procedimentos. O objetivo é permitir que procedimentos sejam modificados ou estendidos de forma modular, por meio da sintaxe @nomeDoDecorator na chamada do procedimento.
 
-Adicionalmente, para fazer isso foi necessário rearranjar toda a estrutura dos procedimentos para permitir que fosse opcional para eles retornar algum valor ou não. Os tipos retornáveis são os tipos primitivos já implementados anteriormente: int, boolean, string, e caso um procedimento não retorne nada, é entendido que se retorna void.
+Adicionalmente, para conseguir fazer isso foi necessário rearranjar a estrutura dos procedimentos para permitir que fosse opcional para eles retornar algum valor ou não. Os tipos retornáveis são os tipos primitivos já implementados anteriormente: int, boolean, string, e caso um procedimento não retorne nada, é entendido que se retorna void. Também foi criada uma estrutura para permitir o uso de funções com retorno.
 
 ### Exemplo de como Decorators funcionam em Python:
 Código:
@@ -43,9 +43,9 @@ Chamando função com argumentos: 3 4
 Resultado: 7
 ```
 
-- log é um decorator que envolve a função original com um comportamento extra (mensagens).
-- @log é a forma declarativa de aplicar o decorator na função soma.
-- O resultado é uma função com o mesmo nome e comportamento da original, mas com comportamento adicional sem alterar o corpo da função.
+- log é um decorator que envolve a função original com um comportamento extra (nesse caso, imprime mensagens).
+- @log é a aplicado como decorator na função soma na declaração da função.
+- O resultado é uma função com o mesmo nome e comportamento da original, mas com o comportamento adicional, sem alterar o corpo de soma.
 - Em python, a associação de decorators à declaração de funções tem a consequência de não permitir que o usuário consiga chamar a função soma com seu comportamento original, apenas a já decorada.
 
 ### Exemplo de como os decorators funcionariam na linguagem da disciplina:
@@ -74,7 +74,7 @@ resultado = "Chamando função com argumentos:" 3 4 "Resultado:" 7
 ```
 
 ### Similaridades e Diferenças
-As duas linguagens estão fazendo a mesma coisa: passando uma função como argumento, chamando-a, e adicionando conteúdo antes e depois, mas existem diferenças:
+Os dois programas estão fazendo a mesma coisa: passando uma função como argumento, chamando-a, e adicionando conteúdo antes e depois, mas existem diferenças:
 Em python, os decorators são aplicados na declaração da função como no código a seguir:
 ```python
 @log
@@ -82,7 +82,7 @@ def soma(x, y):
 return x + y
 ```
 Isso permite aplicar decorators automaticamente a qualquer chamada futura da função soma.
-Na nossa linguagem, foi decidido que os decorators seriam associados à chamada das funções, permitindo aplicar o efeito do decorator apenas quando o desenvolvedor quiser, como mostra o código a seguir:
+Na nossa linguagem, foi estabelecido que os decorators seriam associados à chamada das funções, permitindo aplicar o efeito do decorator apenas quando o desenvolvedor quiser, como mostra o código a seguir:
 
 Chamada decorada:
 ```
@@ -174,15 +174,7 @@ Além disso, decorators encadeáveis podem ser definidos da seguinte forma, send
     ListaExpressao ::= <a href="Imperativa2/src/li2/plp/expressions2/expression/Expressao.java">Expressao</a> | <a href="Imperativa2/src/li2/plp/expressions2/expression/Expressao.java">Expressao</a> &quot;,&quot; <a href="Imperativa2/src/li2/plp/imperative2/command/ListaExpressao.java">ListaExpressao</a>
 </pre>
 
-
-
-
-
-
-
-
-
-## O que tem de novo?
+## O que mudou dessa gramática para a gramática de LI2?
 
 <pre>
     Comando ::= ... | <a href="Imperativa2/src/li2/plp/imperative2/command/ComandoReturn.java">Retorno</a>
